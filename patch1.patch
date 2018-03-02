@@ -1,0 +1,2893 @@
+diff -uNr linux/arch/x86/syscalls/syscall_64.tbl linux-3.13/arch/x86/syscalls/syscall_64.tbl
+--- linux/arch/x86/syscalls/syscall_64.tbl	2014-01-19 18:40:07.000000000 -0800
++++ linux-3.13/arch/x86/syscalls/syscall_64.tbl	2018-02-17 04:14:45.436996826 -0800
+@@ -320,7 +320,7 @@
+ 311	64	process_vm_writev	sys_process_vm_writev
+ 312	common	kcmp			sys_kcmp
+ 313	common	finit_module		sys_finit_module
+-
++314	64	demo			sys_demo
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+ # for native 64-bit operation.
+diff -uNr linux/arch/x86/syscalls/syscall_64.tbl~ linux-3.13/arch/x86/syscalls/syscall_64.tbl~
+--- linux/arch/x86/syscalls/syscall_64.tbl~	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/arch/x86/syscalls/syscall_64.tbl~	2018-02-17 04:14:42.848996851 -0800
+@@ -0,0 +1,358 @@
++#
++# 64-bit system call numbers and entry vectors
++#
++# The format is:
++# <number> <abi> <name> <entry point>
++#
++# The abi is "common", "64" or "x32" for this file.
++#
++0	common	read			sys_read
++1	common	write			sys_write
++2	common	open			sys_open
++3	common	close			sys_close
++4	common	stat			sys_newstat
++5	common	fstat			sys_newfstat
++6	common	lstat			sys_newlstat
++7	common	poll			sys_poll
++8	common	lseek			sys_lseek
++9	common	mmap			sys_mmap
++10	common	mprotect		sys_mprotect
++11	common	munmap			sys_munmap
++12	common	brk			sys_brk
++13	64	rt_sigaction		sys_rt_sigaction
++14	common	rt_sigprocmask		sys_rt_sigprocmask
++15	64	rt_sigreturn		stub_rt_sigreturn
++16	64	ioctl			sys_ioctl
++17	common	pread64			sys_pread64
++18	common	pwrite64		sys_pwrite64
++19	64	readv			sys_readv
++20	64	writev			sys_writev
++21	common	access			sys_access
++22	common	pipe			sys_pipe
++23	common	select			sys_select
++24	common	sched_yield		sys_sched_yield
++25	common	mremap			sys_mremap
++26	common	msync			sys_msync
++27	common	mincore			sys_mincore
++28	common	madvise			sys_madvise
++29	common	shmget			sys_shmget
++30	common	shmat			sys_shmat
++31	common	shmctl			sys_shmctl
++32	common	dup			sys_dup
++33	common	dup2			sys_dup2
++34	common	pause			sys_pause
++35	common	nanosleep		sys_nanosleep
++36	common	getitimer		sys_getitimer
++37	common	alarm			sys_alarm
++38	common	setitimer		sys_setitimer
++39	common	getpid			sys_getpid
++40	common	sendfile		sys_sendfile64
++41	common	socket			sys_socket
++42	common	connect			sys_connect
++43	common	accept			sys_accept
++44	common	sendto			sys_sendto
++45	64	recvfrom		sys_recvfrom
++46	64	sendmsg			sys_sendmsg
++47	64	recvmsg			sys_recvmsg
++48	common	shutdown		sys_shutdown
++49	common	bind			sys_bind
++50	common	listen			sys_listen
++51	common	getsockname		sys_getsockname
++52	common	getpeername		sys_getpeername
++53	common	socketpair		sys_socketpair
++54	64	setsockopt		sys_setsockopt
++55	64	getsockopt		sys_getsockopt
++56	common	clone			stub_clone
++57	common	fork			stub_fork
++58	common	vfork			stub_vfork
++59	64	execve			stub_execve
++60	common	exit			sys_exit
++61	common	wait4			sys_wait4
++62	common	kill			sys_kill
++63	common	uname			sys_newuname
++64	common	semget			sys_semget
++65	common	semop			sys_semop
++66	common	semctl			sys_semctl
++67	common	shmdt			sys_shmdt
++68	common	msgget			sys_msgget
++69	common	msgsnd			sys_msgsnd
++70	common	msgrcv			sys_msgrcv
++71	common	msgctl			sys_msgctl
++72	common	fcntl			sys_fcntl
++73	common	flock			sys_flock
++74	common	fsync			sys_fsync
++75	common	fdatasync		sys_fdatasync
++76	common	truncate		sys_truncate
++77	common	ftruncate		sys_ftruncate
++78	common	getdents		sys_getdents
++79	common	getcwd			sys_getcwd
++80	common	chdir			sys_chdir
++81	common	fchdir			sys_fchdir
++82	common	rename			sys_rename
++83	common	mkdir			sys_mkdir
++84	common	rmdir			sys_rmdir
++85	common	creat			sys_creat
++86	common	link			sys_link
++87	common	unlink			sys_unlink
++88	common	symlink			sys_symlink
++89	common	readlink		sys_readlink
++90	common	chmod			sys_chmod
++91	common	fchmod			sys_fchmod
++92	common	chown			sys_chown
++93	common	fchown			sys_fchown
++94	common	lchown			sys_lchown
++95	common	umask			sys_umask
++96	common	gettimeofday		sys_gettimeofday
++97	common	getrlimit		sys_getrlimit
++98	common	getrusage		sys_getrusage
++99	common	sysinfo			sys_sysinfo
++100	common	times			sys_times
++101	64	ptrace			sys_ptrace
++102	common	getuid			sys_getuid
++103	common	syslog			sys_syslog
++104	common	getgid			sys_getgid
++105	common	setuid			sys_setuid
++106	common	setgid			sys_setgid
++107	common	geteuid			sys_geteuid
++108	common	getegid			sys_getegid
++109	common	setpgid			sys_setpgid
++110	common	getppid			sys_getppid
++111	common	getpgrp			sys_getpgrp
++112	common	setsid			sys_setsid
++113	common	setreuid		sys_setreuid
++114	common	setregid		sys_setregid
++115	common	getgroups		sys_getgroups
++116	common	setgroups		sys_setgroups
++117	common	setresuid		sys_setresuid
++118	common	getresuid		sys_getresuid
++119	common	setresgid		sys_setresgid
++120	common	getresgid		sys_getresgid
++121	common	getpgid			sys_getpgid
++122	common	setfsuid		sys_setfsuid
++123	common	setfsgid		sys_setfsgid
++124	common	getsid			sys_getsid
++125	common	capget			sys_capget
++126	common	capset			sys_capset
++127	64	rt_sigpending		sys_rt_sigpending
++128	64	rt_sigtimedwait		sys_rt_sigtimedwait
++129	64	rt_sigqueueinfo		sys_rt_sigqueueinfo
++130	common	rt_sigsuspend		sys_rt_sigsuspend
++131	64	sigaltstack		sys_sigaltstack
++132	common	utime			sys_utime
++133	common	mknod			sys_mknod
++134	64	uselib
++135	common	personality		sys_personality
++136	common	ustat			sys_ustat
++137	common	statfs			sys_statfs
++138	common	fstatfs			sys_fstatfs
++139	common	sysfs			sys_sysfs
++140	common	getpriority		sys_getpriority
++141	common	setpriority		sys_setpriority
++142	common	sched_setparam		sys_sched_setparam
++143	common	sched_getparam		sys_sched_getparam
++144	common	sched_setscheduler	sys_sched_setscheduler
++145	common	sched_getscheduler	sys_sched_getscheduler
++146	common	sched_get_priority_max	sys_sched_get_priority_max
++147	common	sched_get_priority_min	sys_sched_get_priority_min
++148	common	sched_rr_get_interval	sys_sched_rr_get_interval
++149	common	mlock			sys_mlock
++150	common	munlock			sys_munlock
++151	common	mlockall		sys_mlockall
++152	common	munlockall		sys_munlockall
++153	common	vhangup			sys_vhangup
++154	common	modify_ldt		sys_modify_ldt
++155	common	pivot_root		sys_pivot_root
++156	64	_sysctl			sys_sysctl
++157	common	prctl			sys_prctl
++158	common	arch_prctl		sys_arch_prctl
++159	common	adjtimex		sys_adjtimex
++160	common	setrlimit		sys_setrlimit
++161	common	chroot			sys_chroot
++162	common	sync			sys_sync
++163	common	acct			sys_acct
++164	common	settimeofday		sys_settimeofday
++165	common	mount			sys_mount
++166	common	umount2			sys_umount
++167	common	swapon			sys_swapon
++168	common	swapoff			sys_swapoff
++169	common	reboot			sys_reboot
++170	common	sethostname		sys_sethostname
++171	common	setdomainname		sys_setdomainname
++172	common	iopl			stub_iopl
++173	common	ioperm			sys_ioperm
++174	64	create_module
++175	common	init_module		sys_init_module
++176	common	delete_module		sys_delete_module
++177	64	get_kernel_syms
++178	64	query_module
++179	common	quotactl		sys_quotactl
++180	64	nfsservctl
++181	common	getpmsg
++182	common	putpmsg
++183	common	afs_syscall
++184	common	tuxcall
++185	common	security
++186	common	gettid			sys_gettid
++187	common	readahead		sys_readahead
++188	common	setxattr		sys_setxattr
++189	common	lsetxattr		sys_lsetxattr
++190	common	fsetxattr		sys_fsetxattr
++191	common	getxattr		sys_getxattr
++192	common	lgetxattr		sys_lgetxattr
++193	common	fgetxattr		sys_fgetxattr
++194	common	listxattr		sys_listxattr
++195	common	llistxattr		sys_llistxattr
++196	common	flistxattr		sys_flistxattr
++197	common	removexattr		sys_removexattr
++198	common	lremovexattr		sys_lremovexattr
++199	common	fremovexattr		sys_fremovexattr
++200	common	tkill			sys_tkill
++201	common	time			sys_time
++202	common	futex			sys_futex
++203	common	sched_setaffinity	sys_sched_setaffinity
++204	common	sched_getaffinity	sys_sched_getaffinity
++205	64	set_thread_area
++206	common	io_setup		sys_io_setup
++207	common	io_destroy		sys_io_destroy
++208	common	io_getevents		sys_io_getevents
++209	common	io_submit		sys_io_submit
++210	common	io_cancel		sys_io_cancel
++211	64	get_thread_area
++212	common	lookup_dcookie		sys_lookup_dcookie
++213	common	epoll_create		sys_epoll_create
++214	64	epoll_ctl_old
++215	64	epoll_wait_old
++216	common	remap_file_pages	sys_remap_file_pages
++217	common	getdents64		sys_getdents64
++218	common	set_tid_address		sys_set_tid_address
++219	common	restart_syscall		sys_restart_syscall
++220	common	semtimedop		sys_semtimedop
++221	common	fadvise64		sys_fadvise64
++222	64	timer_create		sys_timer_create
++223	common	timer_settime		sys_timer_settime
++224	common	timer_gettime		sys_timer_gettime
++225	common	timer_getoverrun	sys_timer_getoverrun
++226	common	timer_delete		sys_timer_delete
++227	common	clock_settime		sys_clock_settime
++228	common	clock_gettime		sys_clock_gettime
++229	common	clock_getres		sys_clock_getres
++230	common	clock_nanosleep		sys_clock_nanosleep
++231	common	exit_group		sys_exit_group
++232	common	epoll_wait		sys_epoll_wait
++233	common	epoll_ctl		sys_epoll_ctl
++234	common	tgkill			sys_tgkill
++235	common	utimes			sys_utimes
++236	64	vserver
++237	common	mbind			sys_mbind
++238	common	set_mempolicy		sys_set_mempolicy
++239	common	get_mempolicy		sys_get_mempolicy
++240	common	mq_open			sys_mq_open
++241	common	mq_unlink		sys_mq_unlink
++242	common	mq_timedsend		sys_mq_timedsend
++243	common	mq_timedreceive		sys_mq_timedreceive
++244	64	mq_notify		sys_mq_notify
++245	common	mq_getsetattr		sys_mq_getsetattr
++246	64	kexec_load		sys_kexec_load
++247	64	waitid			sys_waitid
++248	common	add_key			sys_add_key
++249	common	request_key		sys_request_key
++250	common	keyctl			sys_keyctl
++251	common	ioprio_set		sys_ioprio_set
++252	common	ioprio_get		sys_ioprio_get
++253	common	inotify_init		sys_inotify_init
++254	common	inotify_add_watch	sys_inotify_add_watch
++255	common	inotify_rm_watch	sys_inotify_rm_watch
++256	common	migrate_pages		sys_migrate_pages
++257	common	openat			sys_openat
++258	common	mkdirat			sys_mkdirat
++259	common	mknodat			sys_mknodat
++260	common	fchownat		sys_fchownat
++261	common	futimesat		sys_futimesat
++262	common	newfstatat		sys_newfstatat
++263	common	unlinkat		sys_unlinkat
++264	common	renameat		sys_renameat
++265	common	linkat			sys_linkat
++266	common	symlinkat		sys_symlinkat
++267	common	readlinkat		sys_readlinkat
++268	common	fchmodat		sys_fchmodat
++269	common	faccessat		sys_faccessat
++270	common	pselect6		sys_pselect6
++271	common	ppoll			sys_ppoll
++272	common	unshare			sys_unshare
++273	64	set_robust_list		sys_set_robust_list
++274	64	get_robust_list		sys_get_robust_list
++275	common	splice			sys_splice
++276	common	tee			sys_tee
++277	common	sync_file_range		sys_sync_file_range
++278	64	vmsplice		sys_vmsplice
++279	64	move_pages		sys_move_pages
++280	common	utimensat		sys_utimensat
++281	common	epoll_pwait		sys_epoll_pwait
++282	common	signalfd		sys_signalfd
++283	common	timerfd_create		sys_timerfd_create
++284	common	eventfd			sys_eventfd
++285	common	fallocate		sys_fallocate
++286	common	timerfd_settime		sys_timerfd_settime
++287	common	timerfd_gettime		sys_timerfd_gettime
++288	common	accept4			sys_accept4
++289	common	signalfd4		sys_signalfd4
++290	common	eventfd2		sys_eventfd2
++291	common	epoll_create1		sys_epoll_create1
++292	common	dup3			sys_dup3
++293	common	pipe2			sys_pipe2
++294	common	inotify_init1		sys_inotify_init1
++295	64	preadv			sys_preadv
++296	64	pwritev			sys_pwritev
++297	64	rt_tgsigqueueinfo	sys_rt_tgsigqueueinfo
++298	common	perf_event_open		sys_perf_event_open
++299	64	recvmmsg		sys_recvmmsg
++300	common	fanotify_init		sys_fanotify_init
++301	common	fanotify_mark		sys_fanotify_mark
++302	common	prlimit64		sys_prlimit64
++303	common	name_to_handle_at	sys_name_to_handle_at
++304	common	open_by_handle_at	sys_open_by_handle_at
++305	common	clock_adjtime		sys_clock_adjtime
++306	common	syncfs			sys_syncfs
++307	64	sendmmsg		sys_sendmmsg
++308	common	setns			sys_setns
++309	common	getcpu			sys_getcpu
++310	64	process_vm_readv	sys_process_vm_readv
++311	64	process_vm_writev	sys_process_vm_writev
++312	common	kcmp			sys_kcmp
++313	common	finit_module		sys_finit_module
++314	64	demo			sys_demo
++#
++# x32-specific system call numbers start at 512 to avoid cache impact
++# for native 64-bit operation.
++#
++512	x32	rt_sigaction		compat_sys_rt_sigaction
++513	x32	rt_sigreturn		stub_x32_rt_sigreturn
++514	x32	ioctl			compat_sys_ioctl
++515	x32	readv			compat_sys_readv
++516	x32	writev			compat_sys_writev
++517	x32	recvfrom		compat_sys_recvfrom
++518	x32	sendmsg			compat_sys_sendmsg
++519	x32	recvmsg			compat_sys_recvmsg
++520	x32	execve			stub_x32_execve
++521	x32	ptrace			compat_sys_ptrace
++522	x32	rt_sigpending		compat_sys_rt_sigpending
++523	x32	rt_sigtimedwait		compat_sys_rt_sigtimedwait
++524	x32	rt_sigqueueinfo		compat_sys_rt_sigqueueinfo
++525	x32	sigaltstack		compat_sys_sigaltstack
++526	x32	timer_create		compat_sys_timer_create
++527	x32	mq_notify		compat_sys_mq_notify
++528	x32	kexec_load		compat_sys_kexec_load
++529	x32	waitid			compat_sys_waitid
++530	x32	set_robust_list		compat_sys_set_robust_list
++531	x32	get_robust_list		compat_sys_get_robust_list
++532	x32	vmsplice		compat_sys_vmsplice
++533	x32	move_pages		compat_sys_move_pages
++534	x32	preadv			compat_sys_preadv64
++535	x32	pwritev			compat_sys_pwritev64
++536	x32	rt_tgsigqueueinfo	compat_sys_rt_tgsigqueueinfo
++537	x32	recvmmsg		compat_sys_recvmmsg
++538	x32	sendmmsg		compat_sys_sendmmsg
++539	x32	process_vm_readv	compat_sys_process_vm_readv
++540	x32	process_vm_writev	compat_sys_process_vm_writev
++541	x32	setsockopt		compat_sys_setsockopt
++542	x32	getsockopt		compat_sys_getsockopt
+diff -uNr linux/demo/demo.c linux-3.13/demo/demo.c
+--- linux/demo/demo.c	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/demo/demo.c	2018-02-17 04:06:34.605001507 -0800
+@@ -0,0 +1,72 @@
++//http://tuxthink.blogspot.in/2012/07/module-to-find-task-from-its-pid.html
++//http://ytliu.info/notes/linux/file_ops_in_kernel.html
++#include<linux/module.h>
++#include<linux/kernel.h>
++#include<linux/file.h>
++#include<linux/fcntl.h>
++#include<linux/syscalls.h>
++#include<asm/uaccess.h>
++#include<linux/fs.h>
++#include<linux/cdev.h>
++#include<linux/proc_fs.h>
++#include<linux/pid.h>
++#include<linux/pid_namespace.h>
++
++asmlinkage long sys_demo(int pid,char *alpha)
++{
++struct pid *p;
++struct task_struct *task;
++p=find_get_pid(pid);
++task= pid_task(p,PIDTYPE_PID);
++printk("%d",task->pid);
++printk("%s",task->comm);
++printk("%ld",task->state);
++printk("%d",task->prio);
++printk("%d",task->static_prio);
++printk("%d",task->normal_prio);
++printk("%d",task->on_cpu);
++printk("%d",task->wake_cpu);
++printk("%u",task->rt_priority);
++printk("%d",task->tgid);
++printk("%u",task->se.on_rq);
++printk("%lu",task->thread.sp0);
++printk("%lu",task->thread.sp);
++printk("%lu",task->thread.usersp);
++printk("%lu",task->thread.fs);
++printk("%lu",task->thread.gs);
++printk("%lu",task->thread.debugreg6);
++printk("%lu",task->thread.ptrace_dr7);
++printk("%lu",task->thread.cr2);
++printk("%lu",task->thread.trap_nr);
++printk("%lu",task->thread.error_code);
++printk("%lu",task->thread.iopl);
++printk("%d",task->signal->nr_threads);
++printk("%d",task->signal->group_exit_code);
++printk("%d",task->signal->notify_count);
++printk("%d",task->signal->group_stop_count);
++printk("%u",task->signal->flags);
++printk("%d",task->sighand->count);
++printk("%d",task->blocked);
++printk("%d",task->real_blocked);
++char buffer[2048];
++sprintf(buffer,"%d %s %ld %d %d %d %d %d %u %d %u %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %d %d %d %d %u %d %d %d",task->pid,task->comm,task->state,task->prio,task->static_prio,task->normal_prio,task->on_cpu,task->wake_cpu,task->rt_priority,task->tgid,task->se.on_rq,task->thread.sp0,task->thread.sp,task->thread.usersp,task->thread.fs,task->thread.gs,task->thread.debugreg6,task->thread.ptrace_dr7,task->thread.cr2,task->thread.trap_nr,task->thread.error_code,task->thread.iopl,task->signal->nr_threads,task->signal->group_exit_code,task->signal->notify_count,task->signal->group_stop_count,task->signal->flags,task->sighand->count,task->blocked,task->real_blocked);
++struct file *file;
++loff_t pos = 0;
++int fd;
++mm_segment_t old_fs = get_fs();
++set_fs(KERNEL_DS);
++fd = sys_open(alpha, O_WRONLY|O_CREAT, 0644);
++if (fd >= 0) 
++{
++	sys_write(fd,buffer, strlen(buffer));
++	file = fget(fd);
++	if (file) 
++	{
++		vfs_write(file,buffer,strlen(buffer),&pos);
++		fput(file);
++	}
++	sys_close(fd);
++}
++set_fs(old_fs);
++return 0;
++}
+diff -uNr linux/demo/demo.c~ linux-3.13/demo/demo.c~
+--- linux/demo/demo.c~	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/demo/demo.c~	2018-02-17 04:06:30.345001547 -0800
+@@ -0,0 +1,72 @@
++//http://tuxthink.blogspot.in/2012/07/module-to-find-task-from-its-pid.html
++//http://ytliu.info/notes/linux/file_ops_in_kernel.html
++#include<linux/module.h>
++#include<linux/kernel.h>
++#include<linux/file.h>
++#include<linux/fcntl.h>
++#include<linux/syscalls.h>
++#include<asm/uaccess.h>
++#include<linux/fs.h>
++#include<linux/cdev.h>
++#include<linux/proc_fs.h>
++#include<linux/pid.h>
++#include<linux/pid_namespace.h>
++
++asmlinkage long sys_demo(int pid,char *alpha)
++{
++struct pid *p;
++struct task_struct *task;
++p=find_get_pid(pid);
++task= pid_task(p,PIDTYPE_PID);
++printk("%d",task->pid);
++printk("%s",task->comm);
++printk("%ld",task->state);
++printk("%d",task->prio);
++printk("%d",task->static_prio);
++printk("%d",task->normal_prio);
++printk("%d",task->on_cpu);
++printk("%d",task->wake_cpu);
++printk("%u",task->rt_priority);
++printk("%d",task->tgid);
++printk("%u",task->se.on_rq);
++printk("%lu",task->thread.sp0);
++printk("%lu",task->thread.sp);
++printk("%lu",task->thread.usersp);
++printk("%lu",task->thread.fs);
++printk("%lu",task->thread.gs);
++printk("%lu",task->thread.debugreg6);
++printk("%lu",task->thread.ptrace_dr7);
++printk("%lu",task->thread.cr2);
++printk("%lu",task->thread.trap_nr);
++printk("%lu",task->thread.error_code);
++printk("%lu",task->thread.iopl);
++printk("%d",task->signal->nr_threads);
++printk("%d",task->signal->group_exit_code);
++printk("%d",task->signal->notify_count);
++printk("%d",task->signal->group_stop_count);
++printk("%u",task->signal->flags);
++printk("%d",task->sighand->count);
++printk("%d",task->blocked);
++printk("%d",task->real_blocked);
++char buffer[2048];
++sprintf(buffer,"%d %s %ld %d %d %d %d %d %u %d %u %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %lu %d %d %d %d %u %d %d %d",task->pid,task->comm,task->state,task->prio,task->static_prio,task->normal_prio,task->on_cpu,task->wake_cpu,task->rt_priority,task->tgid,task->se.on_rq,task->thread.sp0,task->thread.sp,task->thread.usersp,task->thread.fs,task->thread.gs,task->thread.debugreg6,task->thread.ptrace_dr7,task->thread.cr2,task->thread.trap_nr,task->thread.error_code,task->thread.iopl,task->signal->nr_threads,task->signal->group_exit_code,task->signal->notify_count,task->signal->group_stop_count,task->signal->flags,task->sighand->count,task->blocked,task->real_blocked);
++struct file *file;
++loff_t pos = 0;
++int fd;
++mm_segment_t old_fs = get_fs();
++set_fs(KERNEL_DS);
++fd = sys_open(alpha, O_WRONLY|O_CREAT, 0644);
++if (fd >= 0) 
++{
++	sys_write(fd,buffer, strlen(buffer));
++	file = fget(fd);
++	if (file) 
++	{
++		vfs_write(file,buffer,strlen(buffer),&pos);
++		fput(file);
++	}
++	sys_close(fd);
++}
++set_fs(old_fs);
++return 0;
++}
+diff -uNr linux/demo/Makefile linux-3.13/demo/Makefile
+--- linux/demo/Makefile	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/demo/Makefile	2018-02-17 04:07:17.969001093 -0800
+@@ -0,0 +1 @@
++obj-y := demo.o
+diff -uNr linux/include/linux/syscalls.h linux-3.13/include/linux/syscalls.h
+--- linux/include/linux/syscalls.h	2014-01-19 18:40:07.000000000 -0800
++++ linux-3.13/include/linux/syscalls.h	2018-02-17 04:16:44.444995691 -0800
+@@ -847,4 +847,5 @@
+ asmlinkage long sys_kcmp(pid_t pid1, pid_t pid2, int type,
+ 			 unsigned long idx1, unsigned long idx2);
+ asmlinkage long sys_finit_module(int fd, const char __user *uargs, int flags);
++asmlinkage long sys_demo(int pid,char *alpha);
+ #endif
+diff -uNr linux/include/linux/syscalls.h~ linux-3.13/include/linux/syscalls.h~
+--- linux/include/linux/syscalls.h~	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/include/linux/syscalls.h~	2014-01-19 18:40:07.000000000 -0800
+@@ -0,0 +1,850 @@
++/*
++ * syscalls.h - Linux syscall interfaces (non-arch-specific)
++ *
++ * Copyright (c) 2004 Randy Dunlap
++ * Copyright (c) 2004 Open Source Development Labs
++ *
++ * This file is released under the GPLv2.
++ * See the file COPYING for more details.
++ */
++
++#ifndef _LINUX_SYSCALLS_H
++#define _LINUX_SYSCALLS_H
++
++struct epoll_event;
++struct iattr;
++struct inode;
++struct iocb;
++struct io_event;
++struct iovec;
++struct itimerspec;
++struct itimerval;
++struct kexec_segment;
++struct linux_dirent;
++struct linux_dirent64;
++struct list_head;
++struct mmap_arg_struct;
++struct msgbuf;
++struct msghdr;
++struct mmsghdr;
++struct msqid_ds;
++struct new_utsname;
++struct nfsctl_arg;
++struct __old_kernel_stat;
++struct oldold_utsname;
++struct old_utsname;
++struct pollfd;
++struct rlimit;
++struct rlimit64;
++struct rusage;
++struct sched_param;
++struct sel_arg_struct;
++struct semaphore;
++struct sembuf;
++struct shmid_ds;
++struct sockaddr;
++struct stat;
++struct stat64;
++struct statfs;
++struct statfs64;
++struct __sysctl_args;
++struct sysinfo;
++struct timespec;
++struct timeval;
++struct timex;
++struct timezone;
++struct tms;
++struct utimbuf;
++struct mq_attr;
++struct compat_stat;
++struct compat_timeval;
++struct robust_list_head;
++struct getcpu_cache;
++struct old_linux_dirent;
++struct perf_event_attr;
++struct file_handle;
++struct sigaltstack;
++
++#include <linux/types.h>
++#include <linux/aio_abi.h>
++#include <linux/capability.h>
++#include <linux/signal.h>
++#include <linux/list.h>
++#include <linux/bug.h>
++#include <linux/sem.h>
++#include <asm/siginfo.h>
++#include <linux/unistd.h>
++#include <linux/quota.h>
++#include <linux/key.h>
++#include <trace/syscall.h>
++
++/*
++ * __MAP - apply a macro to syscall arguments
++ * __MAP(n, m, t1, a1, t2, a2, ..., tn, an) will expand to
++ *    m(t1, a1), m(t2, a2), ..., m(tn, an)
++ * The first argument must be equal to the amount of type/name
++ * pairs given.  Note that this list of pairs (i.e. the arguments
++ * of __MAP starting at the third one) is in the same format as
++ * for SYSCALL_DEFINE<n>/COMPAT_SYSCALL_DEFINE<n>
++ */
++#define __MAP0(m,...)
++#define __MAP1(m,t,a) m(t,a)
++#define __MAP2(m,t,a,...) m(t,a), __MAP1(m,__VA_ARGS__)
++#define __MAP3(m,t,a,...) m(t,a), __MAP2(m,__VA_ARGS__)
++#define __MAP4(m,t,a,...) m(t,a), __MAP3(m,__VA_ARGS__)
++#define __MAP5(m,t,a,...) m(t,a), __MAP4(m,__VA_ARGS__)
++#define __MAP6(m,t,a,...) m(t,a), __MAP5(m,__VA_ARGS__)
++#define __MAP(n,...) __MAP##n(__VA_ARGS__)
++
++#define __SC_DECL(t, a)	t a
++#define __TYPE_IS_LL(t) (__same_type((t)0, 0LL) || __same_type((t)0, 0ULL))
++#define __SC_LONG(t, a) __typeof(__builtin_choose_expr(__TYPE_IS_LL(t), 0LL, 0L)) a
++#define __SC_CAST(t, a)	(t) a
++#define __SC_ARGS(t, a)	a
++#define __SC_TEST(t, a) (void)BUILD_BUG_ON_ZERO(!__TYPE_IS_LL(t) && sizeof(t) > sizeof(long))
++
++#ifdef CONFIG_FTRACE_SYSCALLS
++#define __SC_STR_ADECL(t, a)	#a
++#define __SC_STR_TDECL(t, a)	#t
++
++extern struct ftrace_event_class event_class_syscall_enter;
++extern struct ftrace_event_class event_class_syscall_exit;
++extern struct trace_event_functions enter_syscall_print_funcs;
++extern struct trace_event_functions exit_syscall_print_funcs;
++
++#define SYSCALL_TRACE_ENTER_EVENT(sname)				\
++	static struct syscall_metadata __syscall_meta_##sname;		\
++	static struct ftrace_event_call __used				\
++	  event_enter_##sname = {					\
++		.name                   = "sys_enter"#sname,		\
++		.class			= &event_class_syscall_enter,	\
++		.event.funcs            = &enter_syscall_print_funcs,	\
++		.data			= (void *)&__syscall_meta_##sname,\
++		.flags                  = TRACE_EVENT_FL_CAP_ANY,	\
++	};								\
++	static struct ftrace_event_call __used				\
++	  __attribute__((section("_ftrace_events")))			\
++	 *__event_enter_##sname = &event_enter_##sname;
++
++#define SYSCALL_TRACE_EXIT_EVENT(sname)					\
++	static struct syscall_metadata __syscall_meta_##sname;		\
++	static struct ftrace_event_call __used				\
++	  event_exit_##sname = {					\
++		.name                   = "sys_exit"#sname,		\
++		.class			= &event_class_syscall_exit,	\
++		.event.funcs		= &exit_syscall_print_funcs,	\
++		.data			= (void *)&__syscall_meta_##sname,\
++		.flags                  = TRACE_EVENT_FL_CAP_ANY,	\
++	};								\
++	static struct ftrace_event_call __used				\
++	  __attribute__((section("_ftrace_events")))			\
++	*__event_exit_##sname = &event_exit_##sname;
++
++#define SYSCALL_METADATA(sname, nb, ...)			\
++	static const char *types_##sname[] = {			\
++		__MAP(nb,__SC_STR_TDECL,__VA_ARGS__)		\
++	};							\
++	static const char *args_##sname[] = {			\
++		__MAP(nb,__SC_STR_ADECL,__VA_ARGS__)		\
++	};							\
++	SYSCALL_TRACE_ENTER_EVENT(sname);			\
++	SYSCALL_TRACE_EXIT_EVENT(sname);			\
++	static struct syscall_metadata __used			\
++	  __syscall_meta_##sname = {				\
++		.name 		= "sys"#sname,			\
++		.syscall_nr	= -1,	/* Filled in at boot */	\
++		.nb_args 	= nb,				\
++		.types		= nb ? types_##sname : NULL,	\
++		.args		= nb ? args_##sname : NULL,	\
++		.enter_event	= &event_enter_##sname,		\
++		.exit_event	= &event_exit_##sname,		\
++		.enter_fields	= LIST_HEAD_INIT(__syscall_meta_##sname.enter_fields), \
++	};							\
++	static struct syscall_metadata __used			\
++	  __attribute__((section("__syscalls_metadata")))	\
++	 *__p_syscall_meta_##sname = &__syscall_meta_##sname;
++#else
++#define SYSCALL_METADATA(sname, nb, ...)
++#endif
++
++#define SYSCALL_DEFINE0(sname)					\
++	SYSCALL_METADATA(_##sname, 0);				\
++	asmlinkage long sys_##sname(void)
++
++#define SYSCALL_DEFINE1(name, ...) SYSCALL_DEFINEx(1, _##name, __VA_ARGS__)
++#define SYSCALL_DEFINE2(name, ...) SYSCALL_DEFINEx(2, _##name, __VA_ARGS__)
++#define SYSCALL_DEFINE3(name, ...) SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
++#define SYSCALL_DEFINE4(name, ...) SYSCALL_DEFINEx(4, _##name, __VA_ARGS__)
++#define SYSCALL_DEFINE5(name, ...) SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
++#define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
++
++#define SYSCALL_DEFINEx(x, sname, ...)				\
++	SYSCALL_METADATA(sname, x, __VA_ARGS__)			\
++	__SYSCALL_DEFINEx(x, sname, __VA_ARGS__)
++
++#define __PROTECT(...) asmlinkage_protect(__VA_ARGS__)
++#define __SYSCALL_DEFINEx(x, name, ...)					\
++	asmlinkage long sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))	\
++		__attribute__((alias(__stringify(SyS##name))));		\
++	static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
++	asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
++	asmlinkage long SyS##name(__MAP(x,__SC_LONG,__VA_ARGS__))	\
++	{								\
++		long ret = SYSC##name(__MAP(x,__SC_CAST,__VA_ARGS__));	\
++		__MAP(x,__SC_TEST,__VA_ARGS__);				\
++		__PROTECT(x, ret,__MAP(x,__SC_ARGS,__VA_ARGS__));	\
++		return ret;						\
++	}								\
++	static inline long SYSC##name(__MAP(x,__SC_DECL,__VA_ARGS__))
++
++asmlinkage long sys_time(time_t __user *tloc);
++asmlinkage long sys_stime(time_t __user *tptr);
++asmlinkage long sys_gettimeofday(struct timeval __user *tv,
++				struct timezone __user *tz);
++asmlinkage long sys_settimeofday(struct timeval __user *tv,
++				struct timezone __user *tz);
++asmlinkage long sys_adjtimex(struct timex __user *txc_p);
++
++asmlinkage long sys_times(struct tms __user *tbuf);
++
++asmlinkage long sys_gettid(void);
++asmlinkage long sys_nanosleep(struct timespec __user *rqtp, struct timespec __user *rmtp);
++asmlinkage long sys_alarm(unsigned int seconds);
++asmlinkage long sys_getpid(void);
++asmlinkage long sys_getppid(void);
++asmlinkage long sys_getuid(void);
++asmlinkage long sys_geteuid(void);
++asmlinkage long sys_getgid(void);
++asmlinkage long sys_getegid(void);
++asmlinkage long sys_getresuid(uid_t __user *ruid, uid_t __user *euid, uid_t __user *suid);
++asmlinkage long sys_getresgid(gid_t __user *rgid, gid_t __user *egid, gid_t __user *sgid);
++asmlinkage long sys_getpgid(pid_t pid);
++asmlinkage long sys_getpgrp(void);
++asmlinkage long sys_getsid(pid_t pid);
++asmlinkage long sys_getgroups(int gidsetsize, gid_t __user *grouplist);
++
++asmlinkage long sys_setregid(gid_t rgid, gid_t egid);
++asmlinkage long sys_setgid(gid_t gid);
++asmlinkage long sys_setreuid(uid_t ruid, uid_t euid);
++asmlinkage long sys_setuid(uid_t uid);
++asmlinkage long sys_setresuid(uid_t ruid, uid_t euid, uid_t suid);
++asmlinkage long sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid);
++asmlinkage long sys_setfsuid(uid_t uid);
++asmlinkage long sys_setfsgid(gid_t gid);
++asmlinkage long sys_setpgid(pid_t pid, pid_t pgid);
++asmlinkage long sys_setsid(void);
++asmlinkage long sys_setgroups(int gidsetsize, gid_t __user *grouplist);
++
++asmlinkage long sys_acct(const char __user *name);
++asmlinkage long sys_capget(cap_user_header_t header,
++				cap_user_data_t dataptr);
++asmlinkage long sys_capset(cap_user_header_t header,
++				const cap_user_data_t data);
++asmlinkage long sys_personality(unsigned int personality);
++
++asmlinkage long sys_sigpending(old_sigset_t __user *set);
++asmlinkage long sys_sigprocmask(int how, old_sigset_t __user *set,
++				old_sigset_t __user *oset);
++asmlinkage long sys_sigaltstack(const struct sigaltstack __user *uss,
++				struct sigaltstack __user *uoss);
++
++asmlinkage long sys_getitimer(int which, struct itimerval __user *value);
++asmlinkage long sys_setitimer(int which,
++				struct itimerval __user *value,
++				struct itimerval __user *ovalue);
++asmlinkage long sys_timer_create(clockid_t which_clock,
++				 struct sigevent __user *timer_event_spec,
++				 timer_t __user * created_timer_id);
++asmlinkage long sys_timer_gettime(timer_t timer_id,
++				struct itimerspec __user *setting);
++asmlinkage long sys_timer_getoverrun(timer_t timer_id);
++asmlinkage long sys_timer_settime(timer_t timer_id, int flags,
++				const struct itimerspec __user *new_setting,
++				struct itimerspec __user *old_setting);
++asmlinkage long sys_timer_delete(timer_t timer_id);
++asmlinkage long sys_clock_settime(clockid_t which_clock,
++				const struct timespec __user *tp);
++asmlinkage long sys_clock_gettime(clockid_t which_clock,
++				struct timespec __user *tp);
++asmlinkage long sys_clock_adjtime(clockid_t which_clock,
++				struct timex __user *tx);
++asmlinkage long sys_clock_getres(clockid_t which_clock,
++				struct timespec __user *tp);
++asmlinkage long sys_clock_nanosleep(clockid_t which_clock, int flags,
++				const struct timespec __user *rqtp,
++				struct timespec __user *rmtp);
++
++asmlinkage long sys_nice(int increment);
++asmlinkage long sys_sched_setscheduler(pid_t pid, int policy,
++					struct sched_param __user *param);
++asmlinkage long sys_sched_setparam(pid_t pid,
++					struct sched_param __user *param);
++asmlinkage long sys_sched_getscheduler(pid_t pid);
++asmlinkage long sys_sched_getparam(pid_t pid,
++					struct sched_param __user *param);
++asmlinkage long sys_sched_setaffinity(pid_t pid, unsigned int len,
++					unsigned long __user *user_mask_ptr);
++asmlinkage long sys_sched_getaffinity(pid_t pid, unsigned int len,
++					unsigned long __user *user_mask_ptr);
++asmlinkage long sys_sched_yield(void);
++asmlinkage long sys_sched_get_priority_max(int policy);
++asmlinkage long sys_sched_get_priority_min(int policy);
++asmlinkage long sys_sched_rr_get_interval(pid_t pid,
++					struct timespec __user *interval);
++asmlinkage long sys_setpriority(int which, int who, int niceval);
++asmlinkage long sys_getpriority(int which, int who);
++
++asmlinkage long sys_shutdown(int, int);
++asmlinkage long sys_reboot(int magic1, int magic2, unsigned int cmd,
++				void __user *arg);
++asmlinkage long sys_restart_syscall(void);
++asmlinkage long sys_kexec_load(unsigned long entry, unsigned long nr_segments,
++				struct kexec_segment __user *segments,
++				unsigned long flags);
++
++asmlinkage long sys_exit(int error_code);
++asmlinkage long sys_exit_group(int error_code);
++asmlinkage long sys_wait4(pid_t pid, int __user *stat_addr,
++				int options, struct rusage __user *ru);
++asmlinkage long sys_waitid(int which, pid_t pid,
++			   struct siginfo __user *infop,
++			   int options, struct rusage __user *ru);
++asmlinkage long sys_waitpid(pid_t pid, int __user *stat_addr, int options);
++asmlinkage long sys_set_tid_address(int __user *tidptr);
++asmlinkage long sys_futex(u32 __user *uaddr, int op, u32 val,
++			struct timespec __user *utime, u32 __user *uaddr2,
++			u32 val3);
++
++asmlinkage long sys_init_module(void __user *umod, unsigned long len,
++				const char __user *uargs);
++asmlinkage long sys_delete_module(const char __user *name_user,
++				unsigned int flags);
++
++#ifdef CONFIG_OLD_SIGSUSPEND
++asmlinkage long sys_sigsuspend(old_sigset_t mask);
++#endif
++
++#ifdef CONFIG_OLD_SIGSUSPEND3
++asmlinkage long sys_sigsuspend(int unused1, int unused2, old_sigset_t mask);
++#endif
++
++asmlinkage long sys_rt_sigsuspend(sigset_t __user *unewset, size_t sigsetsize);
++
++#ifdef CONFIG_OLD_SIGACTION
++asmlinkage long sys_sigaction(int, const struct old_sigaction __user *,
++				struct old_sigaction __user *);
++#endif
++
++#ifndef CONFIG_ODD_RT_SIGACTION
++asmlinkage long sys_rt_sigaction(int,
++				 const struct sigaction __user *,
++				 struct sigaction __user *,
++				 size_t);
++#endif
++asmlinkage long sys_rt_sigprocmask(int how, sigset_t __user *set,
++				sigset_t __user *oset, size_t sigsetsize);
++asmlinkage long sys_rt_sigpending(sigset_t __user *set, size_t sigsetsize);
++asmlinkage long sys_rt_sigtimedwait(const sigset_t __user *uthese,
++				siginfo_t __user *uinfo,
++				const struct timespec __user *uts,
++				size_t sigsetsize);
++asmlinkage long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t  pid, int sig,
++		siginfo_t __user *uinfo);
++asmlinkage long sys_kill(int pid, int sig);
++asmlinkage long sys_tgkill(int tgid, int pid, int sig);
++asmlinkage long sys_tkill(int pid, int sig);
++asmlinkage long sys_rt_sigqueueinfo(int pid, int sig, siginfo_t __user *uinfo);
++asmlinkage long sys_sgetmask(void);
++asmlinkage long sys_ssetmask(int newmask);
++asmlinkage long sys_signal(int sig, __sighandler_t handler);
++asmlinkage long sys_pause(void);
++
++asmlinkage long sys_sync(void);
++asmlinkage long sys_fsync(unsigned int fd);
++asmlinkage long sys_fdatasync(unsigned int fd);
++asmlinkage long sys_bdflush(int func, long data);
++asmlinkage long sys_mount(char __user *dev_name, char __user *dir_name,
++				char __user *type, unsigned long flags,
++				void __user *data);
++asmlinkage long sys_umount(char __user *name, int flags);
++asmlinkage long sys_oldumount(char __user *name);
++asmlinkage long sys_truncate(const char __user *path, long length);
++asmlinkage long sys_ftruncate(unsigned int fd, unsigned long length);
++asmlinkage long sys_stat(const char __user *filename,
++			struct __old_kernel_stat __user *statbuf);
++asmlinkage long sys_statfs(const char __user * path,
++				struct statfs __user *buf);
++asmlinkage long sys_statfs64(const char __user *path, size_t sz,
++				struct statfs64 __user *buf);
++asmlinkage long sys_fstatfs(unsigned int fd, struct statfs __user *buf);
++asmlinkage long sys_fstatfs64(unsigned int fd, size_t sz,
++				struct statfs64 __user *buf);
++asmlinkage long sys_lstat(const char __user *filename,
++			struct __old_kernel_stat __user *statbuf);
++asmlinkage long sys_fstat(unsigned int fd,
++			struct __old_kernel_stat __user *statbuf);
++asmlinkage long sys_newstat(const char __user *filename,
++				struct stat __user *statbuf);
++asmlinkage long sys_newlstat(const char __user *filename,
++				struct stat __user *statbuf);
++asmlinkage long sys_newfstat(unsigned int fd, struct stat __user *statbuf);
++asmlinkage long sys_ustat(unsigned dev, struct ustat __user *ubuf);
++#if BITS_PER_LONG == 32
++asmlinkage long sys_stat64(const char __user *filename,
++				struct stat64 __user *statbuf);
++asmlinkage long sys_fstat64(unsigned long fd, struct stat64 __user *statbuf);
++asmlinkage long sys_lstat64(const char __user *filename,
++				struct stat64 __user *statbuf);
++asmlinkage long sys_truncate64(const char __user *path, loff_t length);
++asmlinkage long sys_ftruncate64(unsigned int fd, loff_t length);
++#endif
++
++asmlinkage long sys_setxattr(const char __user *path, const char __user *name,
++			     const void __user *value, size_t size, int flags);
++asmlinkage long sys_lsetxattr(const char __user *path, const char __user *name,
++			      const void __user *value, size_t size, int flags);
++asmlinkage long sys_fsetxattr(int fd, const char __user *name,
++			      const void __user *value, size_t size, int flags);
++asmlinkage long sys_getxattr(const char __user *path, const char __user *name,
++			     void __user *value, size_t size);
++asmlinkage long sys_lgetxattr(const char __user *path, const char __user *name,
++			      void __user *value, size_t size);
++asmlinkage long sys_fgetxattr(int fd, const char __user *name,
++			      void __user *value, size_t size);
++asmlinkage long sys_listxattr(const char __user *path, char __user *list,
++			      size_t size);
++asmlinkage long sys_llistxattr(const char __user *path, char __user *list,
++			       size_t size);
++asmlinkage long sys_flistxattr(int fd, char __user *list, size_t size);
++asmlinkage long sys_removexattr(const char __user *path,
++				const char __user *name);
++asmlinkage long sys_lremovexattr(const char __user *path,
++				 const char __user *name);
++asmlinkage long sys_fremovexattr(int fd, const char __user *name);
++
++asmlinkage long sys_brk(unsigned long brk);
++asmlinkage long sys_mprotect(unsigned long start, size_t len,
++				unsigned long prot);
++asmlinkage long sys_mremap(unsigned long addr,
++			   unsigned long old_len, unsigned long new_len,
++			   unsigned long flags, unsigned long new_addr);
++asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
++			unsigned long prot, unsigned long pgoff,
++			unsigned long flags);
++asmlinkage long sys_msync(unsigned long start, size_t len, int flags);
++asmlinkage long sys_fadvise64(int fd, loff_t offset, size_t len, int advice);
++asmlinkage long sys_fadvise64_64(int fd, loff_t offset, loff_t len, int advice);
++asmlinkage long sys_munmap(unsigned long addr, size_t len);
++asmlinkage long sys_mlock(unsigned long start, size_t len);
++asmlinkage long sys_munlock(unsigned long start, size_t len);
++asmlinkage long sys_mlockall(int flags);
++asmlinkage long sys_munlockall(void);
++asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
++asmlinkage long sys_mincore(unsigned long start, size_t len,
++				unsigned char __user * vec);
++
++asmlinkage long sys_pivot_root(const char __user *new_root,
++				const char __user *put_old);
++asmlinkage long sys_chroot(const char __user *filename);
++asmlinkage long sys_mknod(const char __user *filename, umode_t mode,
++				unsigned dev);
++asmlinkage long sys_link(const char __user *oldname,
++				const char __user *newname);
++asmlinkage long sys_symlink(const char __user *old, const char __user *new);
++asmlinkage long sys_unlink(const char __user *pathname);
++asmlinkage long sys_rename(const char __user *oldname,
++				const char __user *newname);
++asmlinkage long sys_chmod(const char __user *filename, umode_t mode);
++asmlinkage long sys_fchmod(unsigned int fd, umode_t mode);
++
++asmlinkage long sys_fcntl(unsigned int fd, unsigned int cmd, unsigned long arg);
++#if BITS_PER_LONG == 32
++asmlinkage long sys_fcntl64(unsigned int fd,
++				unsigned int cmd, unsigned long arg);
++#endif
++asmlinkage long sys_pipe(int __user *fildes);
++asmlinkage long sys_pipe2(int __user *fildes, int flags);
++asmlinkage long sys_dup(unsigned int fildes);
++asmlinkage long sys_dup2(unsigned int oldfd, unsigned int newfd);
++asmlinkage long sys_dup3(unsigned int oldfd, unsigned int newfd, int flags);
++asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int on);
++asmlinkage long sys_ioctl(unsigned int fd, unsigned int cmd,
++				unsigned long arg);
++asmlinkage long sys_flock(unsigned int fd, unsigned int cmd);
++asmlinkage long sys_io_setup(unsigned nr_reqs, aio_context_t __user *ctx);
++asmlinkage long sys_io_destroy(aio_context_t ctx);
++asmlinkage long sys_io_getevents(aio_context_t ctx_id,
++				long min_nr,
++				long nr,
++				struct io_event __user *events,
++				struct timespec __user *timeout);
++asmlinkage long sys_io_submit(aio_context_t, long,
++				struct iocb __user * __user *);
++asmlinkage long sys_io_cancel(aio_context_t ctx_id, struct iocb __user *iocb,
++			      struct io_event __user *result);
++asmlinkage long sys_sendfile(int out_fd, int in_fd,
++			     off_t __user *offset, size_t count);
++asmlinkage long sys_sendfile64(int out_fd, int in_fd,
++			       loff_t __user *offset, size_t count);
++asmlinkage long sys_readlink(const char __user *path,
++				char __user *buf, int bufsiz);
++asmlinkage long sys_creat(const char __user *pathname, umode_t mode);
++asmlinkage long sys_open(const char __user *filename,
++				int flags, umode_t mode);
++asmlinkage long sys_close(unsigned int fd);
++asmlinkage long sys_access(const char __user *filename, int mode);
++asmlinkage long sys_vhangup(void);
++asmlinkage long sys_chown(const char __user *filename,
++				uid_t user, gid_t group);
++asmlinkage long sys_lchown(const char __user *filename,
++				uid_t user, gid_t group);
++asmlinkage long sys_fchown(unsigned int fd, uid_t user, gid_t group);
++#ifdef CONFIG_UID16
++asmlinkage long sys_chown16(const char __user *filename,
++				old_uid_t user, old_gid_t group);
++asmlinkage long sys_lchown16(const char __user *filename,
++				old_uid_t user, old_gid_t group);
++asmlinkage long sys_fchown16(unsigned int fd, old_uid_t user, old_gid_t group);
++asmlinkage long sys_setregid16(old_gid_t rgid, old_gid_t egid);
++asmlinkage long sys_setgid16(old_gid_t gid);
++asmlinkage long sys_setreuid16(old_uid_t ruid, old_uid_t euid);
++asmlinkage long sys_setuid16(old_uid_t uid);
++asmlinkage long sys_setresuid16(old_uid_t ruid, old_uid_t euid, old_uid_t suid);
++asmlinkage long sys_getresuid16(old_uid_t __user *ruid,
++				old_uid_t __user *euid, old_uid_t __user *suid);
++asmlinkage long sys_setresgid16(old_gid_t rgid, old_gid_t egid, old_gid_t sgid);
++asmlinkage long sys_getresgid16(old_gid_t __user *rgid,
++				old_gid_t __user *egid, old_gid_t __user *sgid);
++asmlinkage long sys_setfsuid16(old_uid_t uid);
++asmlinkage long sys_setfsgid16(old_gid_t gid);
++asmlinkage long sys_getgroups16(int gidsetsize, old_gid_t __user *grouplist);
++asmlinkage long sys_setgroups16(int gidsetsize, old_gid_t __user *grouplist);
++asmlinkage long sys_getuid16(void);
++asmlinkage long sys_geteuid16(void);
++asmlinkage long sys_getgid16(void);
++asmlinkage long sys_getegid16(void);
++#endif
++
++asmlinkage long sys_utime(char __user *filename,
++				struct utimbuf __user *times);
++asmlinkage long sys_utimes(char __user *filename,
++				struct timeval __user *utimes);
++asmlinkage long sys_lseek(unsigned int fd, off_t offset,
++			  unsigned int whence);
++asmlinkage long sys_llseek(unsigned int fd, unsigned long offset_high,
++			unsigned long offset_low, loff_t __user *result,
++			unsigned int whence);
++asmlinkage long sys_read(unsigned int fd, char __user *buf, size_t count);
++asmlinkage long sys_readahead(int fd, loff_t offset, size_t count);
++asmlinkage long sys_readv(unsigned long fd,
++			  const struct iovec __user *vec,
++			  unsigned long vlen);
++asmlinkage long sys_write(unsigned int fd, const char __user *buf,
++			  size_t count);
++asmlinkage long sys_writev(unsigned long fd,
++			   const struct iovec __user *vec,
++			   unsigned long vlen);
++asmlinkage long sys_pread64(unsigned int fd, char __user *buf,
++			    size_t count, loff_t pos);
++asmlinkage long sys_pwrite64(unsigned int fd, const char __user *buf,
++			     size_t count, loff_t pos);
++asmlinkage long sys_preadv(unsigned long fd, const struct iovec __user *vec,
++			   unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
++asmlinkage long sys_pwritev(unsigned long fd, const struct iovec __user *vec,
++			    unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
++asmlinkage long sys_getcwd(char __user *buf, unsigned long size);
++asmlinkage long sys_mkdir(const char __user *pathname, umode_t mode);
++asmlinkage long sys_chdir(const char __user *filename);
++asmlinkage long sys_fchdir(unsigned int fd);
++asmlinkage long sys_rmdir(const char __user *pathname);
++asmlinkage long sys_lookup_dcookie(u64 cookie64, char __user *buf, size_t len);
++asmlinkage long sys_quotactl(unsigned int cmd, const char __user *special,
++				qid_t id, void __user *addr);
++asmlinkage long sys_getdents(unsigned int fd,
++				struct linux_dirent __user *dirent,
++				unsigned int count);
++asmlinkage long sys_getdents64(unsigned int fd,
++				struct linux_dirent64 __user *dirent,
++				unsigned int count);
++
++asmlinkage long sys_setsockopt(int fd, int level, int optname,
++				char __user *optval, int optlen);
++asmlinkage long sys_getsockopt(int fd, int level, int optname,
++				char __user *optval, int __user *optlen);
++asmlinkage long sys_bind(int, struct sockaddr __user *, int);
++asmlinkage long sys_connect(int, struct sockaddr __user *, int);
++asmlinkage long sys_accept(int, struct sockaddr __user *, int __user *);
++asmlinkage long sys_accept4(int, struct sockaddr __user *, int __user *, int);
++asmlinkage long sys_getsockname(int, struct sockaddr __user *, int __user *);
++asmlinkage long sys_getpeername(int, struct sockaddr __user *, int __user *);
++asmlinkage long sys_send(int, void __user *, size_t, unsigned);
++asmlinkage long sys_sendto(int, void __user *, size_t, unsigned,
++				struct sockaddr __user *, int);
++asmlinkage long sys_sendmsg(int fd, struct msghdr __user *msg, unsigned flags);
++asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
++			     unsigned int vlen, unsigned flags);
++asmlinkage long sys_recv(int, void __user *, size_t, unsigned);
++asmlinkage long sys_recvfrom(int, void __user *, size_t, unsigned,
++				struct sockaddr __user *, int __user *);
++asmlinkage long sys_recvmsg(int fd, struct msghdr __user *msg, unsigned flags);
++asmlinkage long sys_recvmmsg(int fd, struct mmsghdr __user *msg,
++			     unsigned int vlen, unsigned flags,
++			     struct timespec __user *timeout);
++asmlinkage long sys_socket(int, int, int);
++asmlinkage long sys_socketpair(int, int, int, int __user *);
++asmlinkage long sys_socketcall(int call, unsigned long __user *args);
++asmlinkage long sys_listen(int, int);
++asmlinkage long sys_poll(struct pollfd __user *ufds, unsigned int nfds,
++				int timeout);
++asmlinkage long sys_select(int n, fd_set __user *inp, fd_set __user *outp,
++			fd_set __user *exp, struct timeval __user *tvp);
++asmlinkage long sys_old_select(struct sel_arg_struct __user *arg);
++asmlinkage long sys_epoll_create(int size);
++asmlinkage long sys_epoll_create1(int flags);
++asmlinkage long sys_epoll_ctl(int epfd, int op, int fd,
++				struct epoll_event __user *event);
++asmlinkage long sys_epoll_wait(int epfd, struct epoll_event __user *events,
++				int maxevents, int timeout);
++asmlinkage long sys_epoll_pwait(int epfd, struct epoll_event __user *events,
++				int maxevents, int timeout,
++				const sigset_t __user *sigmask,
++				size_t sigsetsize);
++asmlinkage long sys_gethostname(char __user *name, int len);
++asmlinkage long sys_sethostname(char __user *name, int len);
++asmlinkage long sys_setdomainname(char __user *name, int len);
++asmlinkage long sys_newuname(struct new_utsname __user *name);
++asmlinkage long sys_uname(struct old_utsname __user *);
++asmlinkage long sys_olduname(struct oldold_utsname __user *);
++
++asmlinkage long sys_getrlimit(unsigned int resource,
++				struct rlimit __user *rlim);
++#if defined(COMPAT_RLIM_OLD_INFINITY) || !(defined(CONFIG_IA64))
++asmlinkage long sys_old_getrlimit(unsigned int resource, struct rlimit __user *rlim);
++#endif
++asmlinkage long sys_setrlimit(unsigned int resource,
++				struct rlimit __user *rlim);
++asmlinkage long sys_prlimit64(pid_t pid, unsigned int resource,
++				const struct rlimit64 __user *new_rlim,
++				struct rlimit64 __user *old_rlim);
++asmlinkage long sys_getrusage(int who, struct rusage __user *ru);
++asmlinkage long sys_umask(int mask);
++
++asmlinkage long sys_msgget(key_t key, int msgflg);
++asmlinkage long sys_msgsnd(int msqid, struct msgbuf __user *msgp,
++				size_t msgsz, int msgflg);
++asmlinkage long sys_msgrcv(int msqid, struct msgbuf __user *msgp,
++				size_t msgsz, long msgtyp, int msgflg);
++asmlinkage long sys_msgctl(int msqid, int cmd, struct msqid_ds __user *buf);
++
++asmlinkage long sys_semget(key_t key, int nsems, int semflg);
++asmlinkage long sys_semop(int semid, struct sembuf __user *sops,
++				unsigned nsops);
++asmlinkage long sys_semctl(int semid, int semnum, int cmd, unsigned long arg);
++asmlinkage long sys_semtimedop(int semid, struct sembuf __user *sops,
++				unsigned nsops,
++				const struct timespec __user *timeout);
++asmlinkage long sys_shmat(int shmid, char __user *shmaddr, int shmflg);
++asmlinkage long sys_shmget(key_t key, size_t size, int flag);
++asmlinkage long sys_shmdt(char __user *shmaddr);
++asmlinkage long sys_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
++asmlinkage long sys_ipc(unsigned int call, int first, unsigned long second,
++		unsigned long third, void __user *ptr, long fifth);
++
++asmlinkage long sys_mq_open(const char __user *name, int oflag, umode_t mode, struct mq_attr __user *attr);
++asmlinkage long sys_mq_unlink(const char __user *name);
++asmlinkage long sys_mq_timedsend(mqd_t mqdes, const char __user *msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec __user *abs_timeout);
++asmlinkage long sys_mq_timedreceive(mqd_t mqdes, char __user *msg_ptr, size_t msg_len, unsigned int __user *msg_prio, const struct timespec __user *abs_timeout);
++asmlinkage long sys_mq_notify(mqd_t mqdes, const struct sigevent __user *notification);
++asmlinkage long sys_mq_getsetattr(mqd_t mqdes, const struct mq_attr __user *mqstat, struct mq_attr __user *omqstat);
++
++asmlinkage long sys_pciconfig_iobase(long which, unsigned long bus, unsigned long devfn);
++asmlinkage long sys_pciconfig_read(unsigned long bus, unsigned long dfn,
++				unsigned long off, unsigned long len,
++				void __user *buf);
++asmlinkage long sys_pciconfig_write(unsigned long bus, unsigned long dfn,
++				unsigned long off, unsigned long len,
++				void __user *buf);
++
++asmlinkage long sys_prctl(int option, unsigned long arg2, unsigned long arg3,
++			unsigned long arg4, unsigned long arg5);
++asmlinkage long sys_swapon(const char __user *specialfile, int swap_flags);
++asmlinkage long sys_swapoff(const char __user *specialfile);
++asmlinkage long sys_sysctl(struct __sysctl_args __user *args);
++asmlinkage long sys_sysinfo(struct sysinfo __user *info);
++asmlinkage long sys_sysfs(int option,
++				unsigned long arg1, unsigned long arg2);
++asmlinkage long sys_syslog(int type, char __user *buf, int len);
++asmlinkage long sys_uselib(const char __user *library);
++asmlinkage long sys_ni_syscall(void);
++asmlinkage long sys_ptrace(long request, long pid, unsigned long addr,
++			   unsigned long data);
++
++asmlinkage long sys_add_key(const char __user *_type,
++			    const char __user *_description,
++			    const void __user *_payload,
++			    size_t plen,
++			    key_serial_t destringid);
++
++asmlinkage long sys_request_key(const char __user *_type,
++				const char __user *_description,
++				const char __user *_callout_info,
++				key_serial_t destringid);
++
++asmlinkage long sys_keyctl(int cmd, unsigned long arg2, unsigned long arg3,
++			   unsigned long arg4, unsigned long arg5);
++
++asmlinkage long sys_ioprio_set(int which, int who, int ioprio);
++asmlinkage long sys_ioprio_get(int which, int who);
++asmlinkage long sys_set_mempolicy(int mode, unsigned long __user *nmask,
++				unsigned long maxnode);
++asmlinkage long sys_migrate_pages(pid_t pid, unsigned long maxnode,
++				const unsigned long __user *from,
++				const unsigned long __user *to);
++asmlinkage long sys_move_pages(pid_t pid, unsigned long nr_pages,
++				const void __user * __user *pages,
++				const int __user *nodes,
++				int __user *status,
++				int flags);
++asmlinkage long sys_mbind(unsigned long start, unsigned long len,
++				unsigned long mode,
++				unsigned long __user *nmask,
++				unsigned long maxnode,
++				unsigned flags);
++asmlinkage long sys_get_mempolicy(int __user *policy,
++				unsigned long __user *nmask,
++				unsigned long maxnode,
++				unsigned long addr, unsigned long flags);
++
++asmlinkage long sys_inotify_init(void);
++asmlinkage long sys_inotify_init1(int flags);
++asmlinkage long sys_inotify_add_watch(int fd, const char __user *path,
++					u32 mask);
++asmlinkage long sys_inotify_rm_watch(int fd, __s32 wd);
++
++asmlinkage long sys_spu_run(int fd, __u32 __user *unpc,
++				 __u32 __user *ustatus);
++asmlinkage long sys_spu_create(const char __user *name,
++		unsigned int flags, umode_t mode, int fd);
++
++asmlinkage long sys_mknodat(int dfd, const char __user * filename, umode_t mode,
++			    unsigned dev);
++asmlinkage long sys_mkdirat(int dfd, const char __user * pathname, umode_t mode);
++asmlinkage long sys_unlinkat(int dfd, const char __user * pathname, int flag);
++asmlinkage long sys_symlinkat(const char __user * oldname,
++			      int newdfd, const char __user * newname);
++asmlinkage long sys_linkat(int olddfd, const char __user *oldname,
++			   int newdfd, const char __user *newname, int flags);
++asmlinkage long sys_renameat(int olddfd, const char __user * oldname,
++			     int newdfd, const char __user * newname);
++asmlinkage long sys_futimesat(int dfd, const char __user *filename,
++			      struct timeval __user *utimes);
++asmlinkage long sys_faccessat(int dfd, const char __user *filename, int mode);
++asmlinkage long sys_fchmodat(int dfd, const char __user * filename,
++			     umode_t mode);
++asmlinkage long sys_fchownat(int dfd, const char __user *filename, uid_t user,
++			     gid_t group, int flag);
++asmlinkage long sys_openat(int dfd, const char __user *filename, int flags,
++			   umode_t mode);
++asmlinkage long sys_newfstatat(int dfd, const char __user *filename,
++			       struct stat __user *statbuf, int flag);
++asmlinkage long sys_fstatat64(int dfd, const char __user *filename,
++			       struct stat64 __user *statbuf, int flag);
++asmlinkage long sys_readlinkat(int dfd, const char __user *path, char __user *buf,
++			       int bufsiz);
++asmlinkage long sys_utimensat(int dfd, const char __user *filename,
++				struct timespec __user *utimes, int flags);
++asmlinkage long sys_unshare(unsigned long unshare_flags);
++
++asmlinkage long sys_splice(int fd_in, loff_t __user *off_in,
++			   int fd_out, loff_t __user *off_out,
++			   size_t len, unsigned int flags);
++
++asmlinkage long sys_vmsplice(int fd, const struct iovec __user *iov,
++			     unsigned long nr_segs, unsigned int flags);
++
++asmlinkage long sys_tee(int fdin, int fdout, size_t len, unsigned int flags);
++
++asmlinkage long sys_sync_file_range(int fd, loff_t offset, loff_t nbytes,
++					unsigned int flags);
++asmlinkage long sys_sync_file_range2(int fd, unsigned int flags,
++				     loff_t offset, loff_t nbytes);
++asmlinkage long sys_get_robust_list(int pid,
++				    struct robust_list_head __user * __user *head_ptr,
++				    size_t __user *len_ptr);
++asmlinkage long sys_set_robust_list(struct robust_list_head __user *head,
++				    size_t len);
++asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct getcpu_cache __user *cache);
++asmlinkage long sys_signalfd(int ufd, sigset_t __user *user_mask, size_t sizemask);
++asmlinkage long sys_signalfd4(int ufd, sigset_t __user *user_mask, size_t sizemask, int flags);
++asmlinkage long sys_timerfd_create(int clockid, int flags);
++asmlinkage long sys_timerfd_settime(int ufd, int flags,
++				    const struct itimerspec __user *utmr,
++				    struct itimerspec __user *otmr);
++asmlinkage long sys_timerfd_gettime(int ufd, struct itimerspec __user *otmr);
++asmlinkage long sys_eventfd(unsigned int count);
++asmlinkage long sys_eventfd2(unsigned int count, int flags);
++asmlinkage long sys_fallocate(int fd, int mode, loff_t offset, loff_t len);
++asmlinkage long sys_old_readdir(unsigned int, struct old_linux_dirent __user *, unsigned int);
++asmlinkage long sys_pselect6(int, fd_set __user *, fd_set __user *,
++			     fd_set __user *, struct timespec __user *,
++			     void __user *);
++asmlinkage long sys_ppoll(struct pollfd __user *, unsigned int,
++			  struct timespec __user *, const sigset_t __user *,
++			  size_t);
++asmlinkage long sys_fanotify_init(unsigned int flags, unsigned int event_f_flags);
++asmlinkage long sys_fanotify_mark(int fanotify_fd, unsigned int flags,
++				  u64 mask, int fd,
++				  const char  __user *pathname);
++asmlinkage long sys_syncfs(int fd);
++
++asmlinkage long sys_fork(void);
++asmlinkage long sys_vfork(void);
++#ifdef CONFIG_CLONE_BACKWARDS
++asmlinkage long sys_clone(unsigned long, unsigned long, int __user *, int,
++	       int __user *);
++#else
++#ifdef CONFIG_CLONE_BACKWARDS3
++asmlinkage long sys_clone(unsigned long, unsigned long, int, int __user *,
++			  int __user *, int);
++#else
++asmlinkage long sys_clone(unsigned long, unsigned long, int __user *,
++	       int __user *, int);
++#endif
++#endif
++
++asmlinkage long sys_execve(const char __user *filename,
++		const char __user *const __user *argv,
++		const char __user *const __user *envp);
++
++asmlinkage long sys_perf_event_open(
++		struct perf_event_attr __user *attr_uptr,
++		pid_t pid, int cpu, int group_fd, unsigned long flags);
++
++asmlinkage long sys_mmap_pgoff(unsigned long addr, unsigned long len,
++			unsigned long prot, unsigned long flags,
++			unsigned long fd, unsigned long pgoff);
++asmlinkage long sys_old_mmap(struct mmap_arg_struct __user *arg);
++asmlinkage long sys_name_to_handle_at(int dfd, const char __user *name,
++				      struct file_handle __user *handle,
++				      int __user *mnt_id, int flag);
++asmlinkage long sys_open_by_handle_at(int mountdirfd,
++				      struct file_handle __user *handle,
++				      int flags);
++asmlinkage long sys_setns(int fd, int nstype);
++asmlinkage long sys_process_vm_readv(pid_t pid,
++				     const struct iovec __user *lvec,
++				     unsigned long liovcnt,
++				     const struct iovec __user *rvec,
++				     unsigned long riovcnt,
++				     unsigned long flags);
++asmlinkage long sys_process_vm_writev(pid_t pid,
++				      const struct iovec __user *lvec,
++				      unsigned long liovcnt,
++				      const struct iovec __user *rvec,
++				      unsigned long riovcnt,
++				      unsigned long flags);
++
++asmlinkage long sys_kcmp(pid_t pid1, pid_t pid2, int type,
++			 unsigned long idx1, unsigned long idx2);
++asmlinkage long sys_finit_module(int fd, const char __user *uargs, int flags);
++#endif
+diff -uNr linux/Makefile linux-3.13/Makefile
+--- linux/Makefile	2014-01-19 18:40:07.000000000 -0800
++++ linux-3.13/Makefile	2018-02-17 04:08:38.333000327 -0800
+@@ -754,7 +754,7 @@
+ 
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+-core-y		+= kernel/ mm/ fs/ ipc/ security/ crypto/ block/
++core-y		+= kernel/ mm/ fs/ ipc/ security/ crypto/ block/ demo/
+ 
+ vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
+ 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
+diff -uNr linux/Makefile~ linux-3.13/Makefile~
+--- linux/Makefile~	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/Makefile~	2014-01-19 18:40:07.000000000 -0800
+@@ -0,0 +1,1461 @@
++VERSION = 3
++PATCHLEVEL = 13
++SUBLEVEL = 0
++EXTRAVERSION =
++NAME = One Giant Leap for Frogkind
++
++# *DOCUMENTATION*
++# To see a list of typical targets execute "make help"
++# More info can be located in ./README
++# Comments in this file are targeted only to the developer, do not
++# expect to learn how to build the kernel reading this file.
++
++# Do not:
++# o  use make's built-in rules and variables
++#    (this increases performance and avoids hard-to-debug behaviour);
++# o  print "Entering directory ...";
++MAKEFLAGS += -rR --no-print-directory
++
++# Avoid funny character set dependencies
++unexport LC_ALL
++LC_COLLATE=C
++LC_NUMERIC=C
++export LC_COLLATE LC_NUMERIC
++
++# Avoid interference with shell env settings
++unexport GREP_OPTIONS
++
++# We are using a recursive build, so we need to do a little thinking
++# to get the ordering right.
++#
++# Most importantly: sub-Makefiles should only ever modify files in
++# their own directory. If in some directory we have a dependency on
++# a file in another dir (which doesn't happen often, but it's often
++# unavoidable when linking the built-in.o targets which finally
++# turn into vmlinux), we will call a sub make in that other dir, and
++# after that we are sure that everything which is in that other dir
++# is now up to date.
++#
++# The only cases where we need to modify files which have global
++# effects are thus separated out and done before the recursive
++# descending is started. They are now explicitly listed as the
++# prepare rule.
++
++# To put more focus on warnings, be less verbose as default
++# Use 'make V=1' to see the full commands
++
++ifeq ("$(origin V)", "command line")
++  KBUILD_VERBOSE = $(V)
++endif
++ifndef KBUILD_VERBOSE
++  KBUILD_VERBOSE = 0
++endif
++
++# Call a source code checker (by default, "sparse") as part of the
++# C compilation.
++#
++# Use 'make C=1' to enable checking of only re-compiled files.
++# Use 'make C=2' to enable checking of *all* source files, regardless
++# of whether they are re-compiled or not.
++#
++# See the file "Documentation/sparse.txt" for more details, including
++# where to get the "sparse" utility.
++
++ifeq ("$(origin C)", "command line")
++  KBUILD_CHECKSRC = $(C)
++endif
++ifndef KBUILD_CHECKSRC
++  KBUILD_CHECKSRC = 0
++endif
++
++# Use make M=dir to specify directory of external module to build
++# Old syntax make ... SUBDIRS=$PWD is still supported
++# Setting the environment variable KBUILD_EXTMOD take precedence
++ifdef SUBDIRS
++  KBUILD_EXTMOD ?= $(SUBDIRS)
++endif
++
++ifeq ("$(origin M)", "command line")
++  KBUILD_EXTMOD := $(M)
++endif
++
++# kbuild supports saving output files in a separate directory.
++# To locate output files in a separate directory two syntaxes are supported.
++# In both cases the working directory must be the root of the kernel src.
++# 1) O=
++# Use "make O=dir/to/store/output/files/"
++#
++# 2) Set KBUILD_OUTPUT
++# Set the environment variable KBUILD_OUTPUT to point to the directory
++# where the output files shall be placed.
++# export KBUILD_OUTPUT=dir/to/store/output/files/
++# make
++#
++# The O= assignment takes precedence over the KBUILD_OUTPUT environment
++# variable.
++
++
++# KBUILD_SRC is set on invocation of make in OBJ directory
++# KBUILD_SRC is not intended to be used by the regular user (for now)
++ifeq ($(KBUILD_SRC),)
++
++# OK, Make called in directory where kernel src resides
++# Do we want to locate output files in a separate directory?
++ifeq ("$(origin O)", "command line")
++  KBUILD_OUTPUT := $(O)
++endif
++
++ifeq ("$(origin W)", "command line")
++  export KBUILD_ENABLE_EXTRA_GCC_CHECKS := $(W)
++endif
++
++# That's our default target when none is given on the command line
++PHONY := _all
++_all:
++
++# Cancel implicit rules on top Makefile
++$(CURDIR)/Makefile Makefile: ;
++
++ifneq ($(KBUILD_OUTPUT),)
++# Invoke a second make in the output directory, passing relevant variables
++# check that the output directory actually exists
++saved-output := $(KBUILD_OUTPUT)
++KBUILD_OUTPUT := $(shell cd $(KBUILD_OUTPUT) && /bin/pwd)
++$(if $(KBUILD_OUTPUT),, \
++     $(error output directory "$(saved-output)" does not exist))
++
++PHONY += $(MAKECMDGOALS) sub-make
++
++$(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
++	@:
++
++sub-make: FORCE
++	$(if $(KBUILD_VERBOSE:1=),@)$(MAKE) -C $(KBUILD_OUTPUT) \
++	KBUILD_SRC=$(CURDIR) \
++	KBUILD_EXTMOD="$(KBUILD_EXTMOD)" -f $(CURDIR)/Makefile \
++	$(filter-out _all sub-make,$(MAKECMDGOALS))
++
++# Leave processing to above invocation of make
++skip-makefile := 1
++endif # ifneq ($(KBUILD_OUTPUT),)
++endif # ifeq ($(KBUILD_SRC),)
++
++# We process the rest of the Makefile if this is the final invocation of make
++ifeq ($(skip-makefile),)
++
++# If building an external module we do not care about the all: rule
++# but instead _all depend on modules
++PHONY += all
++ifeq ($(KBUILD_EXTMOD),)
++_all: all
++else
++_all: modules
++endif
++
++srctree		:= $(if $(KBUILD_SRC),$(KBUILD_SRC),$(CURDIR))
++objtree		:= $(CURDIR)
++src		:= $(srctree)
++obj		:= $(objtree)
++
++VPATH		:= $(srctree)$(if $(KBUILD_EXTMOD),:$(KBUILD_EXTMOD))
++
++export srctree objtree VPATH
++
++
++# SUBARCH tells the usermode build what the underlying arch is.  That is set
++# first, and if a usermode build is happening, the "ARCH=um" on the command
++# line overrides the setting of ARCH below.  If a native build is happening,
++# then ARCH is assigned, getting whatever value it gets normally, and 
++# SUBARCH is subsequently ignored.
++
++SUBARCH := $(shell uname -m | sed -e s/i.86/x86/ -e s/x86_64/x86/ \
++				  -e s/sun4u/sparc64/ \
++				  -e s/arm.*/arm/ -e s/sa110/arm/ \
++				  -e s/s390x/s390/ -e s/parisc64/parisc/ \
++				  -e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
++				  -e s/sh[234].*/sh/ -e s/aarch64.*/arm64/ )
++
++# Cross compiling and selecting different set of gcc/bin-utils
++# ---------------------------------------------------------------------------
++#
++# When performing cross compilation for other architectures ARCH shall be set
++# to the target architecture. (See arch/* for the possibilities).
++# ARCH can be set during invocation of make:
++# make ARCH=ia64
++# Another way is to have ARCH set in the environment.
++# The default ARCH is the host where make is executed.
++
++# CROSS_COMPILE specify the prefix used for all executables used
++# during compilation. Only gcc and related bin-utils executables
++# are prefixed with $(CROSS_COMPILE).
++# CROSS_COMPILE can be set on the command line
++# make CROSS_COMPILE=ia64-linux-
++# Alternatively CROSS_COMPILE can be set in the environment.
++# A third alternative is to store a setting in .config so that plain
++# "make" in the configured kernel build directory always uses that.
++# Default value for CROSS_COMPILE is not to prefix executables
++# Note: Some architectures assign CROSS_COMPILE in their arch/*/Makefile
++ARCH		?= $(SUBARCH)
++CROSS_COMPILE	?= $(CONFIG_CROSS_COMPILE:"%"=%)
++
++# Architecture as present in compile.h
++UTS_MACHINE 	:= $(ARCH)
++SRCARCH 	:= $(ARCH)
++
++# Additional ARCH settings for x86
++ifeq ($(ARCH),i386)
++        SRCARCH := x86
++endif
++ifeq ($(ARCH),x86_64)
++        SRCARCH := x86
++endif
++
++# Additional ARCH settings for sparc
++ifeq ($(ARCH),sparc32)
++       SRCARCH := sparc
++endif
++ifeq ($(ARCH),sparc64)
++       SRCARCH := sparc
++endif
++
++# Additional ARCH settings for sh
++ifeq ($(ARCH),sh64)
++       SRCARCH := sh
++endif
++
++# Additional ARCH settings for tile
++ifeq ($(ARCH),tilepro)
++       SRCARCH := tile
++endif
++ifeq ($(ARCH),tilegx)
++       SRCARCH := tile
++endif
++
++# Where to locate arch specific headers
++hdr-arch  := $(SRCARCH)
++
++KCONFIG_CONFIG	?= .config
++export KCONFIG_CONFIG
++
++# SHELL used by kbuild
++CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
++	  else if [ -x /bin/bash ]; then echo /bin/bash; \
++	  else echo sh; fi ; fi)
++
++HOSTCC       = gcc
++HOSTCXX      = g++
++HOSTCFLAGS   = -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
++HOSTCXXFLAGS = -O2
++
++# Decide whether to build built-in, modular, or both.
++# Normally, just do built-in.
++
++KBUILD_MODULES :=
++KBUILD_BUILTIN := 1
++
++#	If we have only "make modules", don't compile built-in objects.
++#	When we're building modules with modversions, we need to consider
++#	the built-in objects during the descend as well, in order to
++#	make sure the checksums are up to date before we record them.
++
++ifeq ($(MAKECMDGOALS),modules)
++  KBUILD_BUILTIN := $(if $(CONFIG_MODVERSIONS),1)
++endif
++
++#	If we have "make <whatever> modules", compile modules
++#	in addition to whatever we do anyway.
++#	Just "make" or "make all" shall build modules as well
++
++ifneq ($(filter all _all modules,$(MAKECMDGOALS)),)
++  KBUILD_MODULES := 1
++endif
++
++ifeq ($(MAKECMDGOALS),)
++  KBUILD_MODULES := 1
++endif
++
++export KBUILD_MODULES KBUILD_BUILTIN
++export KBUILD_CHECKSRC KBUILD_SRC KBUILD_EXTMOD
++
++# Beautify output
++# ---------------------------------------------------------------------------
++#
++# Normally, we echo the whole command before executing it. By making
++# that echo $($(quiet)$(cmd)), we now have the possibility to set
++# $(quiet) to choose other forms of output instead, e.g.
++#
++#         quiet_cmd_cc_o_c = Compiling $(RELDIR)/$@
++#         cmd_cc_o_c       = $(CC) $(c_flags) -c -o $@ $<
++#
++# If $(quiet) is empty, the whole command will be printed.
++# If it is set to "quiet_", only the short version will be printed. 
++# If it is set to "silent_", nothing will be printed at all, since
++# the variable $(silent_cmd_cc_o_c) doesn't exist.
++#
++# A simple variant is to prefix commands with $(Q) - that's useful
++# for commands that shall be hidden in non-verbose mode.
++#
++#	$(Q)ln $@ :<
++#
++# If KBUILD_VERBOSE equals 0 then the above command will be hidden.
++# If KBUILD_VERBOSE equals 1 then the above command is displayed.
++
++ifeq ($(KBUILD_VERBOSE),1)
++  quiet =
++  Q =
++else
++  quiet=quiet_
++  Q = @
++endif
++
++# If the user is running make -s (silent mode), suppress echoing of
++# commands
++
++ifneq ($(filter s% -s%,$(MAKEFLAGS)),)
++  quiet=silent_
++endif
++
++export quiet Q KBUILD_VERBOSE
++
++
++# Look for make include files relative to root of kernel src
++MAKEFLAGS += --include-dir=$(srctree)
++
++# We need some generic definitions (do not try to remake the file).
++$(srctree)/scripts/Kbuild.include: ;
++include $(srctree)/scripts/Kbuild.include
++
++# Make variables (CC, etc...)
++
++AS		= $(CROSS_COMPILE)as
++LD		= $(CROSS_COMPILE)ld
++CC		= $(CROSS_COMPILE)gcc
++CPP		= $(CC) -E
++AR		= $(CROSS_COMPILE)ar
++NM		= $(CROSS_COMPILE)nm
++STRIP		= $(CROSS_COMPILE)strip
++OBJCOPY		= $(CROSS_COMPILE)objcopy
++OBJDUMP		= $(CROSS_COMPILE)objdump
++AWK		= awk
++GENKSYMS	= scripts/genksyms/genksyms
++INSTALLKERNEL  := installkernel
++DEPMOD		= /sbin/depmod
++PERL		= perl
++CHECK		= sparse
++
++CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
++		  -Wbitwise -Wno-return-void $(CF)
++CFLAGS_MODULE   =
++AFLAGS_MODULE   =
++LDFLAGS_MODULE  =
++CFLAGS_KERNEL	=
++AFLAGS_KERNEL	=
++CFLAGS_GCOV	= -fprofile-arcs -ftest-coverage
++
++
++# Use USERINCLUDE when you must reference the UAPI directories only.
++USERINCLUDE    := \
++		-I$(srctree)/arch/$(hdr-arch)/include/uapi \
++		-Iarch/$(hdr-arch)/include/generated/uapi \
++		-I$(srctree)/include/uapi \
++		-Iinclude/generated/uapi \
++                -include $(srctree)/include/linux/kconfig.h
++
++# Use LINUXINCLUDE when you must reference the include/ directory.
++# Needed to be compatible with the O= option
++LINUXINCLUDE    := \
++		-I$(srctree)/arch/$(hdr-arch)/include \
++		-Iarch/$(hdr-arch)/include/generated \
++		$(if $(KBUILD_SRC), -I$(srctree)/include) \
++		-Iinclude \
++		$(USERINCLUDE)
++
++KBUILD_CPPFLAGS := -D__KERNEL__
++
++KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
++		   -fno-strict-aliasing -fno-common \
++		   -Werror-implicit-function-declaration \
++		   -Wno-format-security \
++		   -fno-delete-null-pointer-checks
++KBUILD_AFLAGS_KERNEL :=
++KBUILD_CFLAGS_KERNEL :=
++KBUILD_AFLAGS   := -D__ASSEMBLY__
++KBUILD_AFLAGS_MODULE  := -DMODULE
++KBUILD_CFLAGS_MODULE  := -DMODULE
++KBUILD_LDFLAGS_MODULE := -T $(srctree)/scripts/module-common.lds
++
++# Read KERNELRELEASE from include/config/kernel.release (if it exists)
++KERNELRELEASE = $(shell cat include/config/kernel.release 2> /dev/null)
++KERNELVERSION = $(VERSION)$(if $(PATCHLEVEL),.$(PATCHLEVEL)$(if $(SUBLEVEL),.$(SUBLEVEL)))$(EXTRAVERSION)
++
++export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
++export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
++export CPP AR NM STRIP OBJCOPY OBJDUMP
++export MAKE AWK GENKSYMS INSTALLKERNEL PERL UTS_MACHINE
++export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
++
++export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
++export KBUILD_CFLAGS CFLAGS_KERNEL CFLAGS_MODULE CFLAGS_GCOV
++export KBUILD_AFLAGS AFLAGS_KERNEL AFLAGS_MODULE
++export KBUILD_AFLAGS_MODULE KBUILD_CFLAGS_MODULE KBUILD_LDFLAGS_MODULE
++export KBUILD_AFLAGS_KERNEL KBUILD_CFLAGS_KERNEL
++export KBUILD_ARFLAGS
++
++# When compiling out-of-tree modules, put MODVERDIR in the module
++# tree rather than in the kernel tree. The kernel tree might
++# even be read-only.
++export MODVERDIR := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_versions
++
++# Files to ignore in find ... statements
++
++RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o -name CVS \
++		   -o -name .pc -o -name .hg -o -name .git \) -prune -o
++export RCS_TAR_IGNORE := --exclude SCCS --exclude BitKeeper --exclude .svn \
++			 --exclude CVS --exclude .pc --exclude .hg --exclude .git
++
++# ===========================================================================
++# Rules shared between *config targets and build targets
++
++# Basic helpers built in scripts/
++PHONY += scripts_basic
++scripts_basic:
++	$(Q)$(MAKE) $(build)=scripts/basic
++	$(Q)rm -f .tmp_quiet_recordmcount
++
++# To avoid any implicit rule to kick in, define an empty command.
++scripts/basic/%: scripts_basic ;
++
++PHONY += outputmakefile
++# outputmakefile generates a Makefile in the output directory, if using a
++# separate output directory. This allows convenient use of make in the
++# output directory.
++outputmakefile:
++ifneq ($(KBUILD_SRC),)
++	$(Q)ln -fsn $(srctree) source
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
++	    $(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
++endif
++
++# Support for using generic headers in asm-generic
++PHONY += asm-generic
++asm-generic:
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-generic \
++	            src=asm obj=arch/$(SRCARCH)/include/generated/asm
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.asm-generic \
++	            src=uapi/asm obj=arch/$(SRCARCH)/include/generated/uapi/asm
++
++# To make sure we do not include .config for any of the *config targets
++# catch them early, and hand them over to scripts/kconfig/Makefile
++# It is allowed to specify more targets when calling make, including
++# mixing *config targets and build targets.
++# For example 'make oldconfig all'.
++# Detect when mixed targets is specified, and make a second invocation
++# of make so .config is not included in this case either (for *config).
++
++version_h := include/generated/uapi/linux/version.h
++
++no-dot-config-targets := clean mrproper distclean \
++			 cscope gtags TAGS tags help %docs check% coccicheck \
++			 $(version_h) headers_% archheaders archscripts \
++			 kernelversion %src-pkg
++
++config-targets := 0
++mixed-targets  := 0
++dot-config     := 1
++
++ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
++	ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
++		dot-config := 0
++	endif
++endif
++
++ifeq ($(KBUILD_EXTMOD),)
++        ifneq ($(filter config %config,$(MAKECMDGOALS)),)
++                config-targets := 1
++                ifneq ($(filter-out config %config,$(MAKECMDGOALS)),)
++                        mixed-targets := 1
++                endif
++        endif
++endif
++
++ifeq ($(mixed-targets),1)
++# ===========================================================================
++# We're called with mixed targets (*config and build targets).
++# Handle them one by one.
++
++%:: FORCE
++	$(Q)$(MAKE) -C $(srctree) KBUILD_SRC= $@
++
++else
++ifeq ($(config-targets),1)
++# ===========================================================================
++# *config targets only - make sure prerequisites are updated, and descend
++# in scripts/kconfig to make the *config target
++
++# Read arch specific Makefile to set KBUILD_DEFCONFIG as needed.
++# KBUILD_DEFCONFIG may point out an alternative default configuration
++# used for 'make defconfig'
++include $(srctree)/arch/$(SRCARCH)/Makefile
++export KBUILD_DEFCONFIG KBUILD_KCONFIG
++
++config: scripts_basic outputmakefile FORCE
++	$(Q)mkdir -p include/linux include/config
++	$(Q)$(MAKE) $(build)=scripts/kconfig $@
++
++%config: scripts_basic outputmakefile FORCE
++	$(Q)mkdir -p include/linux include/config
++	$(Q)$(MAKE) $(build)=scripts/kconfig $@
++
++else
++# ===========================================================================
++# Build targets only - this includes vmlinux, arch specific targets, clean
++# targets and others. In general all targets except *config targets.
++
++ifeq ($(KBUILD_EXTMOD),)
++# Additional helpers built in scripts/
++# Carefully list dependencies so we do not try to build scripts twice
++# in parallel
++PHONY += scripts
++scripts: scripts_basic include/config/auto.conf include/config/tristate.conf \
++	 asm-generic
++	$(Q)$(MAKE) $(build)=$(@)
++
++# Objects we will link into vmlinux / subdirs we need to visit
++init-y		:= init/
++drivers-y	:= drivers/ sound/ firmware/
++net-y		:= net/
++libs-y		:= lib/
++core-y		:= usr/
++endif # KBUILD_EXTMOD
++
++ifeq ($(dot-config),1)
++# Read in config
++-include include/config/auto.conf
++
++ifeq ($(KBUILD_EXTMOD),)
++# Read in dependencies to all Kconfig* files, make sure to run
++# oldconfig if changes are detected.
++-include include/config/auto.conf.cmd
++
++# To avoid any implicit rule to kick in, define an empty command
++$(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
++
++# If .config is newer than include/config/auto.conf, someone tinkered
++# with it and forgot to run make oldconfig.
++# if auto.conf.cmd is missing then we are probably in a cleaned tree so
++# we execute the config step to be sure to catch updated Kconfig files
++include/config/%.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
++	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
++else
++# external modules needs include/generated/autoconf.h and include/config/auto.conf
++# but do not care if they are up-to-date. Use auto.conf to trigger the test
++PHONY += include/config/auto.conf
++
++include/config/auto.conf:
++	$(Q)test -e include/generated/autoconf.h -a -e $@ || (		\
++	echo >&2;							\
++	echo >&2 "  ERROR: Kernel configuration is invalid.";		\
++	echo >&2 "         include/generated/autoconf.h or $@ are missing.";\
++	echo >&2 "         Run 'make oldconfig && make prepare' on kernel src to fix it.";	\
++	echo >&2 ;							\
++	/bin/false)
++
++endif # KBUILD_EXTMOD
++
++else
++# Dummy target needed, because used as prerequisite
++include/config/auto.conf: ;
++endif # $(dot-config)
++
++# The all: target is the default when no target is given on the
++# command line.
++# This allow a user to issue only 'make' to build a kernel including modules
++# Defaults to vmlinux, but the arch makefile usually adds further targets
++all: vmlinux
++
++ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
++KBUILD_CFLAGS	+= -Os $(call cc-disable-warning,maybe-uninitialized,)
++else
++KBUILD_CFLAGS	+= -O2
++endif
++
++include $(srctree)/arch/$(SRCARCH)/Makefile
++
++ifdef CONFIG_READABLE_ASM
++# Disable optimizations that make assembler listings hard to read.
++# reorder blocks reorders the control in the function
++# ipa clone creates specialized cloned functions
++# partial inlining inlines only parts of functions
++KBUILD_CFLAGS += $(call cc-option,-fno-reorder-blocks,) \
++                 $(call cc-option,-fno-ipa-cp-clone,) \
++                 $(call cc-option,-fno-partial-inlining)
++endif
++
++ifneq ($(CONFIG_FRAME_WARN),0)
++KBUILD_CFLAGS += $(call cc-option,-Wframe-larger-than=${CONFIG_FRAME_WARN})
++endif
++
++# Force gcc to behave correct even for buggy distributions
++ifndef CONFIG_CC_STACKPROTECTOR
++KBUILD_CFLAGS += $(call cc-option, -fno-stack-protector)
++endif
++
++# This warning generated too much noise in a regular build.
++# Use make W=1 to enable this warning (see scripts/Makefile.build)
++KBUILD_CFLAGS += $(call cc-disable-warning, unused-but-set-variable)
++
++ifdef CONFIG_FRAME_POINTER
++KBUILD_CFLAGS	+= -fno-omit-frame-pointer -fno-optimize-sibling-calls
++else
++# Some targets (ARM with Thumb2, for example), can't be built with frame
++# pointers.  For those, we don't have FUNCTION_TRACER automatically
++# select FRAME_POINTER.  However, FUNCTION_TRACER adds -pg, and this is
++# incompatible with -fomit-frame-pointer with current GCC, so we don't use
++# -fomit-frame-pointer with FUNCTION_TRACER.
++ifndef CONFIG_FUNCTION_TRACER
++KBUILD_CFLAGS	+= -fomit-frame-pointer
++endif
++endif
++
++ifdef CONFIG_DEBUG_INFO
++KBUILD_CFLAGS	+= -g
++KBUILD_AFLAGS	+= -gdwarf-2
++endif
++
++ifdef CONFIG_DEBUG_INFO_REDUCED
++KBUILD_CFLAGS 	+= $(call cc-option, -femit-struct-debug-baseonly) \
++		   $(call cc-option,-fno-var-tracking)
++endif
++
++ifdef CONFIG_FUNCTION_TRACER
++ifdef CONFIG_HAVE_FENTRY
++CC_USING_FENTRY	:= $(call cc-option, -mfentry -DCC_USING_FENTRY)
++endif
++KBUILD_CFLAGS	+= -pg $(CC_USING_FENTRY)
++KBUILD_AFLAGS	+= $(CC_USING_FENTRY)
++ifdef CONFIG_DYNAMIC_FTRACE
++	ifdef CONFIG_HAVE_C_RECORDMCOUNT
++		BUILD_C_RECORDMCOUNT := y
++		export BUILD_C_RECORDMCOUNT
++	endif
++endif
++endif
++
++# We trigger additional mismatches with less inlining
++ifdef CONFIG_DEBUG_SECTION_MISMATCH
++KBUILD_CFLAGS += $(call cc-option, -fno-inline-functions-called-once)
++endif
++
++# arch Makefile may override CC so keep this after arch Makefile is included
++NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
++CHECKFLAGS     += $(NOSTDINC_FLAGS)
++
++# warn about C99 declaration after statement
++KBUILD_CFLAGS += $(call cc-option,-Wdeclaration-after-statement,)
++
++# disable pointer signed / unsigned warnings in gcc 4.0
++KBUILD_CFLAGS += $(call cc-disable-warning, pointer-sign)
++
++# disable invalid "can't wrap" optimizations for signed / pointers
++KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
++
++# conserve stack if available
++KBUILD_CFLAGS   += $(call cc-option,-fconserve-stack)
++
++# disallow errors like 'EXPORT_GPL(foo);' with missing header
++KBUILD_CFLAGS   += $(call cc-option,-Werror=implicit-int)
++
++# require functions to have arguments in prototypes, not empty 'int foo()'
++KBUILD_CFLAGS   += $(call cc-option,-Werror=strict-prototypes)
++
++# use the deterministic mode of AR if available
++KBUILD_ARFLAGS := $(call ar-option,D)
++
++# check for 'asm goto'
++ifeq ($(shell $(CONFIG_SHELL) $(srctree)/scripts/gcc-goto.sh $(CC)), y)
++	KBUILD_CFLAGS += -DCC_HAVE_ASM_GOTO
++endif
++
++# Add user supplied CPPFLAGS, AFLAGS and CFLAGS as the last assignments
++KBUILD_CPPFLAGS += $(KCPPFLAGS)
++KBUILD_AFLAGS += $(KAFLAGS)
++KBUILD_CFLAGS += $(KCFLAGS)
++
++# Use --build-id when available.
++LDFLAGS_BUILD_ID = $(patsubst -Wl$(comma)%,%,\
++			      $(call cc-ldoption, -Wl$(comma)--build-id,))
++KBUILD_LDFLAGS_MODULE += $(LDFLAGS_BUILD_ID)
++LDFLAGS_vmlinux += $(LDFLAGS_BUILD_ID)
++
++ifeq ($(CONFIG_STRIP_ASM_SYMS),y)
++LDFLAGS_vmlinux	+= $(call ld-option, -X,)
++endif
++
++# Default kernel image to build when no specific target is given.
++# KBUILD_IMAGE may be overruled on the command line or
++# set in the environment
++# Also any assignments in arch/$(ARCH)/Makefile take precedence over
++# this default value
++export KBUILD_IMAGE ?= vmlinux
++
++#
++# INSTALL_PATH specifies where to place the updated kernel and system map
++# images. Default is /boot, but you can set it to other values
++export	INSTALL_PATH ?= /boot
++
++#
++# INSTALL_MOD_PATH specifies a prefix to MODLIB for module directory
++# relocations required by build roots.  This is not defined in the
++# makefile but the argument can be passed to make if needed.
++#
++
++MODLIB	= $(INSTALL_MOD_PATH)/lib/modules/$(KERNELRELEASE)
++export MODLIB
++
++#
++#  INSTALL_MOD_STRIP, if defined, will cause modules to be
++#  stripped after they are installed.  If INSTALL_MOD_STRIP is '1', then
++#  the default option --strip-debug will be used.  Otherwise,
++#  INSTALL_MOD_STRIP value will be used as the options to the strip command.
++
++ifdef INSTALL_MOD_STRIP
++ifeq ($(INSTALL_MOD_STRIP),1)
++mod_strip_cmd = $(STRIP) --strip-debug
++else
++mod_strip_cmd = $(STRIP) $(INSTALL_MOD_STRIP)
++endif # INSTALL_MOD_STRIP=1
++else
++mod_strip_cmd = true
++endif # INSTALL_MOD_STRIP
++export mod_strip_cmd
++
++# Select initial ramdisk compression format, default is gzip(1).
++# This shall be used by the dracut(8) tool while creating an initramfs image.
++#
++INITRD_COMPRESS-y                  := gzip
++INITRD_COMPRESS-$(CONFIG_RD_BZIP2) := bzip2
++INITRD_COMPRESS-$(CONFIG_RD_LZMA)  := lzma
++INITRD_COMPRESS-$(CONFIG_RD_XZ)    := xz
++INITRD_COMPRESS-$(CONFIG_RD_LZO)   := lzo
++INITRD_COMPRESS-$(CONFIG_RD_LZ4)   := lz4
++# do not export INITRD_COMPRESS, since we didn't actually
++# choose a sane default compression above.
++# export INITRD_COMPRESS := $(INITRD_COMPRESS-y)
++
++ifdef CONFIG_MODULE_SIG_ALL
++MODSECKEY = ./signing_key.priv
++MODPUBKEY = ./signing_key.x509
++export MODPUBKEY
++mod_sign_cmd = perl $(srctree)/scripts/sign-file $(CONFIG_MODULE_SIG_HASH) $(MODSECKEY) $(MODPUBKEY)
++else
++mod_sign_cmd = true
++endif
++export mod_sign_cmd
++
++
++ifeq ($(KBUILD_EXTMOD),)
++core-y		+= kernel/ mm/ fs/ ipc/ security/ crypto/ block/
++
++vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
++		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
++		     $(net-y) $(net-m) $(libs-y) $(libs-m)))
++
++vmlinux-alldirs	:= $(sort $(vmlinux-dirs) $(patsubst %/,%,$(filter %/, \
++		     $(init-n) $(init-) \
++		     $(core-n) $(core-) $(drivers-n) $(drivers-) \
++		     $(net-n)  $(net-)  $(libs-n)    $(libs-))))
++
++init-y		:= $(patsubst %/, %/built-in.o, $(init-y))
++core-y		:= $(patsubst %/, %/built-in.o, $(core-y))
++drivers-y	:= $(patsubst %/, %/built-in.o, $(drivers-y))
++net-y		:= $(patsubst %/, %/built-in.o, $(net-y))
++libs-y1		:= $(patsubst %/, %/lib.a, $(libs-y))
++libs-y2		:= $(patsubst %/, %/built-in.o, $(libs-y))
++libs-y		:= $(libs-y1) $(libs-y2)
++
++# Externally visible symbols (used by link-vmlinux.sh)
++export KBUILD_VMLINUX_INIT := $(head-y) $(init-y)
++export KBUILD_VMLINUX_MAIN := $(core-y) $(libs-y) $(drivers-y) $(net-y)
++export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
++export LDFLAGS_vmlinux
++# used by scripts/pacmage/Makefile
++export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) arch Documentation include samples scripts tools virt)
++
++vmlinux-deps := $(KBUILD_LDS) $(KBUILD_VMLINUX_INIT) $(KBUILD_VMLINUX_MAIN)
++
++# Final link of vmlinux
++      cmd_link-vmlinux = $(CONFIG_SHELL) $< $(LD) $(LDFLAGS) $(LDFLAGS_vmlinux)
++quiet_cmd_link-vmlinux = LINK    $@
++
++# Include targets which we want to
++# execute if the rest of the kernel build went well.
++vmlinux: scripts/link-vmlinux.sh $(vmlinux-deps) FORCE
++ifdef CONFIG_HEADERS_CHECK
++	$(Q)$(MAKE) -f $(srctree)/Makefile headers_check
++endif
++ifdef CONFIG_SAMPLES
++	$(Q)$(MAKE) $(build)=samples
++endif
++ifdef CONFIG_BUILD_DOCSRC
++	$(Q)$(MAKE) $(build)=Documentation
++endif
++	+$(call if_changed,link-vmlinux)
++
++# The actual objects are generated when descending, 
++# make sure no implicit rule kicks in
++$(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
++
++# Handle descending into subdirectories listed in $(vmlinux-dirs)
++# Preset locale variables to speed up the build process. Limit locale
++# tweaks to this spot to avoid wrong language settings when running
++# make menuconfig etc.
++# Error messages still appears in the original language
++
++PHONY += $(vmlinux-dirs)
++$(vmlinux-dirs): prepare scripts
++	$(Q)$(MAKE) $(build)=$@
++
++define filechk_kernel.release
++	echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
++endef
++
++# Store (new) KERNELRELEASE string in include/config/kernel.release
++include/config/kernel.release: include/config/auto.conf FORCE
++	$(call filechk,kernel.release)
++
++
++# Things we need to do before we recursively start building the kernel
++# or the modules are listed in "prepare".
++# A multi level approach is used. prepareN is processed before prepareN-1.
++# archprepare is used in arch Makefiles and when processed asm symlink,
++# version.h and scripts_basic is processed / created.
++
++# Listed in dependency order
++PHONY += prepare archprepare prepare0 prepare1 prepare2 prepare3
++
++# prepare3 is used to check if we are building in a separate output directory,
++# and if so do:
++# 1) Check that make has not been executed in the kernel src $(srctree)
++prepare3: include/config/kernel.release
++ifneq ($(KBUILD_SRC),)
++	@$(kecho) '  Using $(srctree) as source for kernel'
++	$(Q)if [ -f $(srctree)/.config -o -d $(srctree)/include/config ]; then \
++		echo >&2 "  $(srctree) is not clean, please run 'make mrproper'"; \
++		echo >&2 "  in the '$(srctree)' directory.";\
++		/bin/false; \
++	fi;
++endif
++
++# prepare2 creates a makefile if using a separate output directory
++prepare2: prepare3 outputmakefile asm-generic
++
++prepare1: prepare2 $(version_h) include/generated/utsrelease.h \
++                   include/config/auto.conf
++	$(cmd_crmodverdir)
++
++archprepare: archheaders archscripts prepare1 scripts_basic
++
++prepare0: archprepare FORCE
++	$(Q)$(MAKE) $(build)=.
++
++# All the preparing..
++prepare: prepare0
++
++# Generate some files
++# ---------------------------------------------------------------------------
++
++# KERNELRELEASE can change from a few different places, meaning version.h
++# needs to be updated, so this check is forced on all builds
++
++uts_len := 64
++define filechk_utsrelease.h
++	if [ `echo -n "$(KERNELRELEASE)" | wc -c ` -gt $(uts_len) ]; then \
++	  echo '"$(KERNELRELEASE)" exceeds $(uts_len) characters' >&2;    \
++	  exit 1;                                                         \
++	fi;                                                               \
++	(echo \#define UTS_RELEASE \"$(KERNELRELEASE)\";)
++endef
++
++define filechk_version.h
++	(echo \#define LINUX_VERSION_CODE $(shell                         \
++	expr $(VERSION) \* 65536 + 0$(PATCHLEVEL) \* 256 + 0$(SUBLEVEL)); \
++	echo '#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + (c))';)
++endef
++
++$(version_h): $(srctree)/Makefile FORCE
++	$(call filechk,version.h)
++
++include/generated/utsrelease.h: include/config/kernel.release FORCE
++	$(call filechk,utsrelease.h)
++
++PHONY += headerdep
++headerdep:
++	$(Q)find $(srctree)/include/ -name '*.h' | xargs --max-args 1 \
++	$(srctree)/scripts/headerdep.pl -I$(srctree)/include
++
++# ---------------------------------------------------------------------------
++
++PHONY += depend dep
++depend dep:
++	@echo '*** Warning: make $@ is unnecessary now.'
++
++# ---------------------------------------------------------------------------
++# Firmware install
++INSTALL_FW_PATH=$(INSTALL_MOD_PATH)/lib/firmware
++export INSTALL_FW_PATH
++
++PHONY += firmware_install
++firmware_install: FORCE
++	@mkdir -p $(objtree)/firmware
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_install
++
++# ---------------------------------------------------------------------------
++# Kernel headers
++
++#Default location for installed headers
++export INSTALL_HDR_PATH = $(objtree)/usr
++
++hdr-inst := -rR -f $(srctree)/scripts/Makefile.headersinst obj
++
++# If we do an all arch process set dst to asm-$(hdr-arch)
++hdr-dst = $(if $(KBUILD_HEADERS), dst=include/asm-$(hdr-arch), dst=include/asm)
++
++PHONY += archheaders
++archheaders:
++
++PHONY += archscripts
++archscripts:
++
++PHONY += __headers
++__headers: $(version_h) scripts_basic asm-generic archheaders archscripts FORCE
++	$(Q)$(MAKE) $(build)=scripts build_unifdef
++
++PHONY += headers_install_all
++headers_install_all:
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/headers.sh install
++
++PHONY += headers_install
++headers_install: __headers
++	$(if $(wildcard $(srctree)/arch/$(hdr-arch)/include/uapi/asm/Kbuild),, \
++	  $(error Headers not exportable for the $(SRCARCH) architecture))
++	$(Q)$(MAKE) $(hdr-inst)=include/uapi
++	$(Q)$(MAKE) $(hdr-inst)=arch/$(hdr-arch)/include/uapi/asm $(hdr-dst)
++
++PHONY += headers_check_all
++headers_check_all: headers_install_all
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/headers.sh check
++
++PHONY += headers_check
++headers_check: headers_install
++	$(Q)$(MAKE) $(hdr-inst)=include/uapi HDRCHECK=1
++	$(Q)$(MAKE) $(hdr-inst)=arch/$(hdr-arch)/include/uapi/asm $(hdr-dst) HDRCHECK=1
++
++# ---------------------------------------------------------------------------
++# Modules
++
++ifdef CONFIG_MODULES
++
++# By default, build modules as well
++
++all: modules
++
++#	Build modules
++#
++#	A module can be listed more than once in obj-m resulting in
++#	duplicate lines in modules.order files.  Those are removed
++#	using awk while concatenating to the final file.
++
++PHONY += modules
++modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
++	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
++	@$(kecho) '  Building modules, stage 2.';
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_modbuild
++
++modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
++	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
++
++%/modules.builtin: include/config/auto.conf
++	$(Q)$(MAKE) $(modbuiltin)=$*
++
++
++# Target to prepare building external modules
++PHONY += modules_prepare
++modules_prepare: prepare scripts
++
++# Target to install modules
++PHONY += modules_install
++modules_install: _modinst_ _modinst_post
++
++PHONY += _modinst_
++_modinst_:
++	@rm -rf $(MODLIB)/kernel
++	@rm -f $(MODLIB)/source
++	@mkdir -p $(MODLIB)/kernel
++	@ln -s $(srctree) $(MODLIB)/source
++	@if [ ! $(objtree) -ef  $(MODLIB)/build ]; then \
++		rm -f $(MODLIB)/build ; \
++		ln -s $(objtree) $(MODLIB)/build ; \
++	fi
++	@cp -f $(objtree)/modules.order $(MODLIB)/
++	@cp -f $(objtree)/modules.builtin $(MODLIB)/
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
++
++# This depmod is only for convenience to give the initial
++# boot a modules.dep even before / is mounted read-write.  However the
++# boot script depmod is the master version.
++PHONY += _modinst_post
++_modinst_post: _modinst_
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.fwinst obj=firmware __fw_modinst
++	$(call cmd,depmod)
++
++ifeq ($(CONFIG_MODULE_SIG), y)
++PHONY += modules_sign
++modules_sign:
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modsign
++endif
++
++else # CONFIG_MODULES
++
++# Modules not configured
++# ---------------------------------------------------------------------------
++
++modules modules_install: FORCE
++	@echo >&2
++	@echo >&2 "The present kernel configuration has modules disabled."
++	@echo >&2 "Type 'make config' and enable loadable module support."
++	@echo >&2 "Then build a kernel with module support enabled."
++	@echo >&2
++	@exit 1
++
++endif # CONFIG_MODULES
++
++###
++# Cleaning is done on three levels.
++# make clean     Delete most generated files
++#                Leave enough to build external modules
++# make mrproper  Delete the current configuration, and all generated files
++# make distclean Remove editor backup files, patch leftover files and the like
++
++# Directories & files removed with 'make clean'
++CLEAN_DIRS  += $(MODVERDIR)
++
++# Directories & files removed with 'make mrproper'
++MRPROPER_DIRS  += include/config usr/include include/generated          \
++                  arch/*/include/generated
++MRPROPER_FILES += .config .config.old .version .old_version $(version_h) \
++		  Module.symvers tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS \
++		  signing_key.priv signing_key.x509 x509.genkey		\
++		  extra_certificates signing_key.x509.keyid		\
++		  signing_key.x509.signer
++
++# clean - Delete most, but leave enough to build external modules
++#
++clean: rm-dirs  := $(CLEAN_DIRS)
++clean: rm-files := $(CLEAN_FILES)
++clean-dirs      := $(addprefix _clean_, . $(vmlinux-alldirs) Documentation samples)
++
++PHONY += $(clean-dirs) clean archclean vmlinuxclean
++$(clean-dirs):
++	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
++
++vmlinuxclean:
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/link-vmlinux.sh clean
++
++clean: archclean vmlinuxclean
++
++# mrproper - Delete all generated files, including .config
++#
++mrproper: rm-dirs  := $(wildcard $(MRPROPER_DIRS))
++mrproper: rm-files := $(wildcard $(MRPROPER_FILES))
++mrproper-dirs      := $(addprefix _mrproper_,Documentation/DocBook scripts)
++
++PHONY += $(mrproper-dirs) mrproper archmrproper
++$(mrproper-dirs):
++	$(Q)$(MAKE) $(clean)=$(patsubst _mrproper_%,%,$@)
++
++mrproper: clean archmrproper $(mrproper-dirs)
++	$(call cmd,rmdirs)
++	$(call cmd,rmfiles)
++
++# distclean
++#
++PHONY += distclean
++
++distclean: mrproper
++	@find $(srctree) $(RCS_FIND_IGNORE) \
++		\( -name '*.orig' -o -name '*.rej' -o -name '*~' \
++		-o -name '*.bak' -o -name '#*#' -o -name '.*.orig' \
++		-o -name '.*.rej' \
++		-o -name '*%' -o -name '.*.cmd' -o -name 'core' \) \
++		-type f -print | xargs rm -f
++
++
++# Packaging of the kernel to various formats
++# ---------------------------------------------------------------------------
++# rpm target kept for backward compatibility
++package-dir	:= $(srctree)/scripts/package
++
++%src-pkg: FORCE
++	$(Q)$(MAKE) $(build)=$(package-dir) $@
++%pkg: include/config/kernel.release FORCE
++	$(Q)$(MAKE) $(build)=$(package-dir) $@
++rpm: include/config/kernel.release FORCE
++	$(Q)$(MAKE) $(build)=$(package-dir) $@
++
++
++# Brief documentation of the typical targets used
++# ---------------------------------------------------------------------------
++
++boards := $(wildcard $(srctree)/arch/$(SRCARCH)/configs/*_defconfig)
++boards := $(notdir $(boards))
++board-dirs := $(dir $(wildcard $(srctree)/arch/$(SRCARCH)/configs/*/*_defconfig))
++board-dirs := $(sort $(notdir $(board-dirs:/=)))
++
++help:
++	@echo  'Cleaning targets:'
++	@echo  '  clean		  - Remove most generated files but keep the config and'
++	@echo  '                    enough build support to build external modules'
++	@echo  '  mrproper	  - Remove all generated files + config + various backup files'
++	@echo  '  distclean	  - mrproper + remove editor backup and patch files'
++	@echo  ''
++	@echo  'Configuration targets:'
++	@$(MAKE) -f $(srctree)/scripts/kconfig/Makefile help
++	@echo  ''
++	@echo  'Other generic targets:'
++	@echo  '  all		  - Build all targets marked with [*]'
++	@echo  '* vmlinux	  - Build the bare kernel'
++	@echo  '* modules	  - Build all modules'
++	@echo  '  modules_install - Install all modules to INSTALL_MOD_PATH (default: /)'
++	@echo  '  firmware_install- Install all firmware to INSTALL_FW_PATH'
++	@echo  '                    (default: $$(INSTALL_MOD_PATH)/lib/firmware)'
++	@echo  '  dir/            - Build all files in dir and below'
++	@echo  '  dir/file.[oisS] - Build specified target only'
++	@echo  '  dir/file.lst    - Build specified mixed source/assembly target only'
++	@echo  '                    (requires a recent binutils and recent build (System.map))'
++	@echo  '  dir/file.ko     - Build module including final link'
++	@echo  '  modules_prepare - Set up for building external modules'
++	@echo  '  tags/TAGS	  - Generate tags file for editors'
++	@echo  '  cscope	  - Generate cscope index'
++	@echo  '  gtags           - Generate GNU GLOBAL index'
++	@echo  '  kernelrelease	  - Output the release version string'
++	@echo  '  kernelversion	  - Output the version stored in Makefile'
++	@echo  '  image_name	  - Output the image name'
++	@echo  '  headers_install - Install sanitised kernel headers to INSTALL_HDR_PATH'; \
++	 echo  '                    (default: $(INSTALL_HDR_PATH))'; \
++	 echo  ''
++	@echo  'Static analysers'
++	@echo  '  checkstack      - Generate a list of stack hogs'
++	@echo  '  namespacecheck  - Name space analysis on compiled kernel'
++	@echo  '  versioncheck    - Sanity check on version.h usage'
++	@echo  '  includecheck    - Check for duplicate included header files'
++	@echo  '  export_report   - List the usages of all exported symbols'
++	@echo  '  headers_check   - Sanity check on exported headers'
++	@echo  '  headerdep       - Detect inclusion cycles in headers'
++	@$(MAKE) -f $(srctree)/scripts/Makefile.help checker-help
++	@echo  ''
++	@echo  'Kernel packaging:'
++	@$(MAKE) $(build)=$(package-dir) help
++	@echo  ''
++	@echo  'Documentation targets:'
++	@$(MAKE) -f $(srctree)/Documentation/DocBook/Makefile dochelp
++	@echo  ''
++	@echo  'Architecture specific targets ($(SRCARCH)):'
++	@$(if $(archhelp),$(archhelp),\
++		echo '  No architecture specific help defined for $(SRCARCH)')
++	@echo  ''
++	@$(if $(boards), \
++		$(foreach b, $(boards), \
++		printf "  %-24s - Build for %s\\n" $(b) $(subst _defconfig,,$(b));) \
++		echo '')
++	@$(if $(board-dirs), \
++		$(foreach b, $(board-dirs), \
++		printf "  %-16s - Show %s-specific targets\\n" help-$(b) $(b);) \
++		printf "  %-16s - Show all of the above\\n" help-boards; \
++		echo '')
++
++	@echo  '  make V=0|1 [targets] 0 => quiet build (default), 1 => verbose build'
++	@echo  '  make V=2   [targets] 2 => give reason for rebuild of target'
++	@echo  '  make O=dir [targets] Locate all output files in "dir", including .config'
++	@echo  '  make C=1   [targets] Check all c source with $$CHECK (sparse by default)'
++	@echo  '  make C=2   [targets] Force check of all c source with $$CHECK'
++	@echo  '  make RECORDMCOUNT_WARN=1 [targets] Warn about ignored mcount sections'
++	@echo  '  make W=n   [targets] Enable extra gcc checks, n=1,2,3 where'
++	@echo  '		1: warnings which may be relevant and do not occur too often'
++	@echo  '		2: warnings which occur quite often but may still be relevant'
++	@echo  '		3: more obscure warnings, can most likely be ignored'
++	@echo  '		Multiple levels can be combined with W=12 or W=123'
++	@echo  ''
++	@echo  'Execute "make" or "make all" to build all targets marked with [*] '
++	@echo  'For further info see the ./README file'
++
++
++help-board-dirs := $(addprefix help-,$(board-dirs))
++
++help-boards: $(help-board-dirs)
++
++boards-per-dir = $(notdir $(wildcard $(srctree)/arch/$(SRCARCH)/configs/$*/*_defconfig))
++
++$(help-board-dirs): help-%:
++	@echo  'Architecture specific targets ($(SRCARCH) $*):'
++	@$(if $(boards-per-dir), \
++		$(foreach b, $(boards-per-dir), \
++		printf "  %-24s - Build for %s\\n" $*/$(b) $(subst _defconfig,,$(b));) \
++		echo '')
++
++
++# Documentation targets
++# ---------------------------------------------------------------------------
++%docs: scripts_basic FORCE
++	$(Q)$(MAKE) $(build)=scripts build_docproc
++	$(Q)$(MAKE) $(build)=Documentation/DocBook $@
++
++else # KBUILD_EXTMOD
++
++###
++# External module support.
++# When building external modules the kernel used as basis is considered
++# read-only, and no consistency checks are made and the make
++# system is not used on the basis kernel. If updates are required
++# in the basis kernel ordinary make commands (without M=...) must
++# be used.
++#
++# The following are the only valid targets when building external
++# modules.
++# make M=dir clean     Delete all automatically generated files
++# make M=dir modules   Make all modules in specified dir
++# make M=dir	       Same as 'make M=dir modules'
++# make M=dir modules_install
++#                      Install the modules built in the module directory
++#                      Assumes install directory is already created
++
++# We are always building modules
++KBUILD_MODULES := 1
++PHONY += crmodverdir
++crmodverdir:
++	$(cmd_crmodverdir)
++
++PHONY += $(objtree)/Module.symvers
++$(objtree)/Module.symvers:
++	@test -e $(objtree)/Module.symvers || ( \
++	echo; \
++	echo "  WARNING: Symbol version dump $(objtree)/Module.symvers"; \
++	echo "           is missing; modules will have no dependencies and modversions."; \
++	echo )
++
++module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
++PHONY += $(module-dirs) modules
++$(module-dirs): crmodverdir $(objtree)/Module.symvers
++	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
++
++modules: $(module-dirs)
++	@$(kecho) '  Building modules, stage 2.';
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++
++PHONY += modules_install
++modules_install: _emodinst_ _emodinst_post
++
++install-dir := $(if $(INSTALL_MOD_DIR),$(INSTALL_MOD_DIR),extra)
++PHONY += _emodinst_
++_emodinst_:
++	$(Q)mkdir -p $(MODLIB)/$(install-dir)
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modinst
++
++PHONY += _emodinst_post
++_emodinst_post: _emodinst_
++	$(call cmd,depmod)
++
++clean-dirs := $(addprefix _clean_,$(KBUILD_EXTMOD))
++
++PHONY += $(clean-dirs) clean
++$(clean-dirs):
++	$(Q)$(MAKE) $(clean)=$(patsubst _clean_%,%,$@)
++
++clean:	rm-dirs := $(MODVERDIR)
++clean: rm-files := $(KBUILD_EXTMOD)/Module.symvers
++
++help:
++	@echo  '  Building external modules.'
++	@echo  '  Syntax: make -C path/to/kernel/src M=$$PWD target'
++	@echo  ''
++	@echo  '  modules         - default target, build the module(s)'
++	@echo  '  modules_install - install the module'
++	@echo  '  clean           - remove generated files in module directory only'
++	@echo  ''
++
++# Dummies...
++PHONY += prepare scripts
++prepare: ;
++scripts: ;
++endif # KBUILD_EXTMOD
++
++clean: $(clean-dirs)
++	$(call cmd,rmdirs)
++	$(call cmd,rmfiles)
++	@find $(if $(KBUILD_EXTMOD), $(KBUILD_EXTMOD), .) $(RCS_FIND_IGNORE) \
++		\( -name '*.[oas]' -o -name '*.ko' -o -name '.*.cmd' \
++		-o -name '*.ko.*' \
++		-o -name '.*.d' -o -name '.*.tmp' -o -name '*.mod.c' \
++		-o -name '*.symtypes' -o -name 'modules.order' \
++		-o -name modules.builtin -o -name '.tmp_*.o.*' \
++		-o -name '*.gcno' \) -type f -print | xargs rm -f
++
++# Generate tags for editors
++# ---------------------------------------------------------------------------
++quiet_cmd_tags = GEN     $@
++      cmd_tags = $(CONFIG_SHELL) $(srctree)/scripts/tags.sh $@
++
++tags TAGS cscope gtags: FORCE
++	$(call cmd,tags)
++
++# Scripts to check various things for consistency
++# ---------------------------------------------------------------------------
++
++PHONY += includecheck versioncheck coccicheck namespacecheck export_report
++
++includecheck:
++	find $(srctree)/* $(RCS_FIND_IGNORE) \
++		-name '*.[hcS]' -type f -print | sort \
++		| xargs $(PERL) -w $(srctree)/scripts/checkincludes.pl
++
++versioncheck:
++	find $(srctree)/* $(RCS_FIND_IGNORE) \
++		-name '*.[hcS]' -type f -print | sort \
++		| xargs $(PERL) -w $(srctree)/scripts/checkversion.pl
++
++coccicheck:
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/$@
++
++namespacecheck:
++	$(PERL) $(srctree)/scripts/namespace.pl
++
++export_report:
++	$(PERL) $(srctree)/scripts/export_report.pl
++
++endif #ifeq ($(config-targets),1)
++endif #ifeq ($(mixed-targets),1)
++
++PHONY += checkstack kernelrelease kernelversion image_name
++
++# UML needs a little special treatment here.  It wants to use the host
++# toolchain, so needs $(SUBARCH) passed to checkstack.pl.  Everyone
++# else wants $(ARCH), including people doing cross-builds, which means
++# that $(SUBARCH) doesn't work here.
++ifeq ($(ARCH), um)
++CHECKSTACK_ARCH := $(SUBARCH)
++else
++CHECKSTACK_ARCH := $(ARCH)
++endif
++checkstack:
++	$(OBJDUMP) -d vmlinux $$(find . -name '*.ko') | \
++	$(PERL) $(src)/scripts/checkstack.pl $(CHECKSTACK_ARCH)
++
++kernelrelease:
++	@echo "$(KERNELVERSION)$$($(CONFIG_SHELL) $(srctree)/scripts/setlocalversion $(srctree))"
++
++kernelversion:
++	@echo $(KERNELVERSION)
++
++image_name:
++	@echo $(KBUILD_IMAGE)
++
++# Clear a bunch of variables before executing the submake
++tools/: FORCE
++	$(Q)mkdir -p $(objtree)/tools
++	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter --j% -j,$(MAKEFLAGS))" O=$(objtree) subdir=tools -C $(src)/tools/
++
++tools/%: FORCE
++	$(Q)mkdir -p $(objtree)/tools
++	$(Q)$(MAKE) LDFLAGS= MAKEFLAGS="$(filter --j% -j,$(MAKEFLAGS))" O=$(objtree) subdir=tools -C $(src)/tools/ $*
++
++# Single targets
++# ---------------------------------------------------------------------------
++# Single targets are compatible with:
++# - build with mixed source and output
++# - build with separate output dir 'make O=...'
++# - external modules
++#
++#  target-dir => where to store outputfile
++#  build-dir  => directory in kernel source tree to use
++
++ifeq ($(KBUILD_EXTMOD),)
++        build-dir  = $(patsubst %/,%,$(dir $@))
++        target-dir = $(dir $@)
++else
++        zap-slash=$(filter-out .,$(patsubst %/,%,$(dir $@)))
++        build-dir  = $(KBUILD_EXTMOD)$(if $(zap-slash),/$(zap-slash))
++        target-dir = $(if $(KBUILD_EXTMOD),$(dir $<),$(dir $@))
++endif
++
++%.s: %.c prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.i: %.c prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.o: %.c prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.lst: %.c prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.s: %.S prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.o: %.S prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++%.symtypes: %.c prepare scripts FORCE
++	$(Q)$(MAKE) $(build)=$(build-dir) $(target-dir)$(notdir $@)
++
++# Modules
++/: prepare scripts FORCE
++	$(cmd_crmodverdir)
++	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
++	$(build)=$(build-dir)
++%/: prepare scripts FORCE
++	$(cmd_crmodverdir)
++	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
++	$(build)=$(build-dir)
++%.ko: prepare scripts FORCE
++	$(cmd_crmodverdir)
++	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
++	$(build)=$(build-dir) $(@:.ko=.o)
++	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++
++# FIXME Should go into a make.lib or something 
++# ===========================================================================
++
++quiet_cmd_rmdirs = $(if $(wildcard $(rm-dirs)),CLEAN   $(wildcard $(rm-dirs)))
++      cmd_rmdirs = rm -rf $(rm-dirs)
++
++quiet_cmd_rmfiles = $(if $(wildcard $(rm-files)),CLEAN   $(wildcard $(rm-files)))
++      cmd_rmfiles = rm -f $(rm-files)
++
++# Run depmod only if we have System.map and depmod is executable
++quiet_cmd_depmod = DEPMOD  $(KERNELRELEASE)
++      cmd_depmod = $(CONFIG_SHELL) $(srctree)/scripts/depmod.sh $(DEPMOD) \
++                   $(KERNELRELEASE) "$(patsubst y,_,$(CONFIG_HAVE_UNDERSCORE_SYMBOL_PREFIX))"
++
++# Create temporary dir for module support files
++# clean it up only when building all modules
++cmd_crmodverdir = $(Q)mkdir -p $(MODVERDIR) \
++                  $(if $(KBUILD_MODULES),; rm -f $(MODVERDIR)/*)
++
++# read all saved command lines
++
++targets := $(wildcard $(sort $(targets)))
++cmd_files := $(wildcard .*.cmd $(foreach f,$(targets),$(dir $(f)).$(notdir $(f)).cmd))
++
++ifneq ($(cmd_files),)
++  $(cmd_files): ;	# Do not try to update included dependency files
++  include $(cmd_files)
++endif
++
++# Shorthand for $(Q)$(MAKE) -f scripts/Makefile.clean obj=dir
++# Usage:
++# $(Q)$(MAKE) $(clean)=dir
++clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj
++
++endif	# skip-makefile
++
++PHONY += FORCE
++FORCE:
++
++# Declare the contents of the .PHONY variable as phony.  We keep that
++# information in a variable so we can use it in if_changed and friends.
++.PHONY: $(PHONY)
+diff -uNr linux/security/tomoyo/builtin-policy.h linux-3.13/security/tomoyo/builtin-policy.h
+--- linux/security/tomoyo/builtin-policy.h	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/security/tomoyo/builtin-policy.h	2018-02-17 02:28:14.617991536 -0800
+@@ -0,0 +1,12 @@
++static char tomoyo_builtin_profile[] __initdata =
++"";
++static char tomoyo_builtin_exception_policy[] __initdata =
++"initialize_domain /sbin/modprobe from any\n"
++"initialize_domain /sbin/hotplug from any\n"
++"";
++static char tomoyo_builtin_domain_policy[] __initdata =
++"";
++static char tomoyo_builtin_manager[] __initdata =
++"";
++static char tomoyo_builtin_stat[] __initdata =
++"";
+diff -uNr linux/security/tomoyo/policy/exception_policy.conf linux-3.13/security/tomoyo/policy/exception_policy.conf
+--- linux/security/tomoyo/policy/exception_policy.conf	1969-12-31 16:00:00.000000000 -0800
++++ linux-3.13/security/tomoyo/policy/exception_policy.conf	2018-02-17 02:28:05.177991626 -0800
+@@ -0,0 +1,2 @@
++initialize_domain /sbin/modprobe from any
++initialize_domain /sbin/hotplug from any
